@@ -8,6 +8,9 @@ import lain.mods.skinport.network.packet.PacketGet0;
 import lain.mods.skinport.network.packet.PacketGet1;
 import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -37,10 +40,21 @@ public class SkinPort
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static Render getEntityRenderObject(RenderManager manager, Entity entity, Render value)
+    {
+        return value;
+    }
+
     public static void onPut0(UUID uuid, int value)
     {
         // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) SkinPort.network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
         SkinPort.network.sendToAll(new PacketPut1(uuid, value));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void postRenderManagerInit(RenderManager manager)
+    {
     }
 
     public static final NetworkManager network = new NetworkManager("skinport");
