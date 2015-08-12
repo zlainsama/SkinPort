@@ -26,6 +26,11 @@ minecraft {
     runDir = "eclipse"
 }
 
+jar
+{
+    exclude('api/player/**/**')
+}
+
 processResources
 {
     inputs.property "version", project.version
