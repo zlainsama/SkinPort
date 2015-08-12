@@ -31,9 +31,7 @@ processResources
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    from 'license.txt'
-    from 'license-gpl.txt'
-    from 'license-lgpl.txt'
+    from 'LICENSE.txt'
 
     from(sourceSets.main.resources.srcDirs)
     {
