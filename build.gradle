@@ -26,6 +26,14 @@ minecraft {
     runDir = "eclipse"
 }
 
+jar
+{
+    manifest {
+        attributes 'FMLCorePlugin': 'lain.mods.skinport.asm.Plugin',
+		           'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 processResources
 {
     inputs.property "version", project.version
