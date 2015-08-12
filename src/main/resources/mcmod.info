@@ -3,7 +3,7 @@
   "modList": [{
     "modid": "skinport",
     "name": "SkinPort",
-    "description": "This mod adds rendering support for the new skin format introduced in minecraft 1.8 using RenderPlayer API",
+    "description": "This mod adds rendering support for the new skin format introduced in minecraft 1.8",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "https://github.com/zlainsama/skinport",

@@ -9,7 +9,6 @@ import lain.mods.skinport.network.packet.PacketGet1;
 import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
 import net.minecraft.entity.player.EntityPlayerMP;
-import api.player.model.ModelPlayerAPI;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -83,9 +82,6 @@ public class SkinPort
         network.registerPacket(2, PacketPut0.class);
         network.registerPacket(3, PacketGet1.class);
         network.registerPacket(4, PacketPut1.class);
-
-        if (event.getSide().isClient())
-            ModelPlayerAPI.register("skinport", SkinPortModelPlayerBase.class);
     }
 
 }
