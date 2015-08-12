@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "skinport",
+    "name": "SkinPort",
+    "description": "This mod adds rendering support for the new skin format introduced in minecraft 1.8 using RenderPlayer API",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/zlainsama/skinport",
+    "updateUrl": "",
+    "authorList": ["zlainsama"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": ["Forge"],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": true
+  }]
+}

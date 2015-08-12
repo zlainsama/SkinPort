@@ -1,0 +1,5 @@
+This minecraft mod, SkinPort,
+is licensed under the GNU Lesser General Public License Version 3 or later.
+
+You should have received a copy of the GNU Lesser General Public License and the
+GNU General Public License along with Render Player API. If not, see <http://www.gnu.org/licenses/>.
