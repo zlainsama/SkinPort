@@ -112,7 +112,7 @@ public class SkinPortModelPlayer extends ModelBiped
             bipedBodyWear.render(p_render_7_);
         }
         GL11.glPopMatrix();
-        
+
         if (smallArms)
             bipedRightArm.rotationPointX += 1.0F;
     }
@@ -128,4 +128,5 @@ public class SkinPortModelPlayer extends ModelBiped
         copyModelAngles(bipedRightArm, bipedRightArmwear);
         copyModelAngles(bipedBody, bipedBodyWear);
     }
+
 }
