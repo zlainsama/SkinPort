@@ -1,13 +1,18 @@
 package lain.mods.skinport;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import lain.mods.skinport.api.ISkin;
+import lain.mods.skinport.api.ISkinProvider;
+import lain.mods.skinport.api.SkinProviderAPI;
 import lain.mods.skinport.network.NetworkManager;
 import lain.mods.skinport.network.packet.PacketGet0;
 import lain.mods.skinport.network.packet.PacketGet1;
 import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -15,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -43,6 +49,16 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static Render getEntityRenderObject(RenderManager manager, Entity entity, Render value)
     {
+        if (entity instanceof AbstractClientPlayer)
+        {
+            AbstractClientPlayer player = (AbstractClientPlayer) entity;
+            ISkin skin = SkinProviderAPI.getSkin(player);
+            if (!skin.isSkinReady())
+                skin = SkinProviderAPI.getDefaultSkin(player);
+            Render render = skinMap.get(skin.getSkinType());
+            if (render != null)
+                return render;
+        }
         return value;
     }
 
@@ -55,6 +71,11 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void postRenderManagerInit(RenderManager manager)
     {
+        skinMap.put("default", new SkinPortRenderPlayer(false));
+        skinMap.put("slim", new SkinPortRenderPlayer(true));
+
+        for (Render entry : skinMap.values())
+            entry.setRenderManager(manager);
     }
 
     public static final NetworkManager network = new NetworkManager("skinport");
@@ -89,6 +110,9 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static int clientValue = SkinCustomization.getDefaultValue();
 
+    @SideOnly(Side.CLIENT)
+    public static final Map<String, Render> skinMap = Maps.newHashMap();
+
     @Mod.EventHandler
     public void init(FMLPreInitializationEvent event)
     {
@@ -96,6 +120,20 @@ public class SkinPort
         network.registerPacket(2, PacketPut0.class);
         network.registerPacket(3, PacketGet1.class);
         network.registerPacket(4, PacketPut1.class);
+
+        if (event.getSide().isClient())
+        {
+            SkinProviderAPI.register(new ISkinProvider()
+            {
+
+                @Override
+                public ISkin getSkin(AbstractClientPlayer player)
+                {
+                    // TODO Auto-generated method stub
+                    return SkinProviderAPI.SKIN_ALEX;
+                }
+            }, true);
+        }
     }
 
 }
