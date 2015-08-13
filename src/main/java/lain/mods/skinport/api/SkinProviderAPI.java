@@ -82,7 +82,7 @@ public class SkinProviderAPI
     public static final ISkin SKIN_STEVE = new ISkin()
     {
 
-        ResourceLocation texture = new ResourceLocation("textures/entity/steve.png");
+        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/steve.png");
 
         @Override
         public ResourceLocation getSkinLocation()
@@ -106,7 +106,7 @@ public class SkinProviderAPI
     public static final ISkin SKIN_ALEX = new ISkin()
     {
 
-        ResourceLocation texture = new ResourceLocation("textures/entity/alex.png");
+        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/alex.png");
 
         @Override
         public ResourceLocation getSkinLocation()
