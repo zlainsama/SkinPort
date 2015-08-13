@@ -26,6 +26,7 @@ public class SkinPortRenderPlayer extends RenderPlayer
         modelPlayer = (SkinPortModelPlayer) mainModel;
     }
 
+    @Override
     public void doRender(AbstractClientPlayer p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
     {
         boolean smHeadwear = modelPlayer.bipedHeadwear.showModel;
@@ -65,6 +66,7 @@ public class SkinPortRenderPlayer extends RenderPlayer
         return skin.getSkinLocation();
     }
 
+    @Override
     protected void renderEquippedItems(AbstractClientPlayer p_77029_1_, float p_77029_2_)
     {
         boolean smHeadwear = modelPlayer.bipedHeadwear.showModel;
