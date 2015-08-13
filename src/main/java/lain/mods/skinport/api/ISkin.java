@@ -13,7 +13,7 @@ public interface ISkin
     String getSkinType();
 
     /**
-     * @return You should only return true when the texture is already uploaded to the TextureManager which means it's ready to use.
+     * @return You should only return true when (1. your texture object is already uploaded to the {@link net.minecraft.client.renderer.texture.TextureManager}) or (2. your texture can be loaded by {@link net.minecraft.client.renderer.texture.SimpleTexture} object).
      */
     boolean isSkinReady();
 
