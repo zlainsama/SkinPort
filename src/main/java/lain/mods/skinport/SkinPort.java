@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lain.mods.skinport.api.ISkin;
-import lain.mods.skinport.api.ISkinProvider;
 import lain.mods.skinport.api.SkinProviderAPI;
 import lain.mods.skinport.network.NetworkManager;
 import lain.mods.skinport.network.packet.PacketGet0;
@@ -122,18 +121,7 @@ public class SkinPort
         network.registerPacket(4, PacketPut1.class);
 
         if (event.getSide().isClient())
-        {
-            SkinProviderAPI.register(new ISkinProvider()
-            {
-
-                @Override
-                public ISkin getSkin(AbstractClientPlayer player)
-                {
-                    // TODO Auto-generated method stub
-                    return SkinProviderAPI.SKIN_ALEX;
-                }
-            }, true);
-        }
+            SkinProviderAPI.register(MojangSkinProviderService.createSkinProvider(), true);
     }
 
 }

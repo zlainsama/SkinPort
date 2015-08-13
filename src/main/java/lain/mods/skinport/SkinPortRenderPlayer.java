@@ -46,4 +46,5 @@ public class SkinPortRenderPlayer extends RenderPlayer
         SkinPortModelPlayer.copyModelAngles(modelPlayer.bipedRightArm, modelPlayer.bipedRightArmwear);
         modelPlayer.bipedRightArmwear.render(0.0625F);
     }
+
 }
