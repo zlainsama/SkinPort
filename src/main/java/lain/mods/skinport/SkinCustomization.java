@@ -25,10 +25,11 @@ public enum SkinCustomization
     {
         int value = 0;
         for (SkinCustomization flag : flags)
-            value += (int) Math.pow(2, flag.ordinal());
+            value += flag._value;
         return value;
     }
 
+    private final int _value = (int) Math.pow(2, ordinal());
     private static final int _defaultValue = of(values());
 
 }
