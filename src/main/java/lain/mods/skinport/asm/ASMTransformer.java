@@ -22,11 +22,14 @@ public class ASMTransformer implements IClassTransformer
             }
 
             @Override
-            public void visitEnd()
+            public void visitInsn(int opcode)
             {
-                this.visitVarInsn(Opcodes.ALOAD, 0);
-                this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/asm/Hooks", "postRenderManagerInit", "(Lnet/minecraft/client/renderer/entity/RenderManager;)V", false);
-                super.visitEnd();
+                if (opcode == Opcodes.RETURN)
+                {
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/asm/Hooks", "postRenderManagerInit", "(Lnet/minecraft/client/renderer/entity/RenderManager;)V", false);
+                }
+                super.visitInsn(opcode);
             }
 
         }
