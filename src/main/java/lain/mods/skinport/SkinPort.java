@@ -11,6 +11,8 @@ import lain.mods.skinport.network.packet.PacketGet0;
 import lain.mods.skinport.network.packet.PacketGet1;
 import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
+import lain.mods.skinport.providers.CrafatarSkinProviderService;
+import lain.mods.skinport.providers.MojangSkinProviderService;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -121,7 +123,10 @@ public class SkinPort
         network.registerPacket(4, PacketPut1.class);
 
         if (event.getSide().isClient())
+        {
             SkinProviderAPI.register(MojangSkinProviderService.createSkinProvider(), true);
+            SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
+        }
     }
 
 }

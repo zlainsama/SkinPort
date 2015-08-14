@@ -1,49 +1,96 @@
 package lain.mods.skinport;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.UUID;
 import lain.mods.skinport.api.ISkin;
-import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
-public class SkinData extends SimpleTexture implements ISkin
+public class SkinData implements ISkin
 {
+
+    class CachedTexture extends AbstractTexture
+    {
+
+        final BufferedImage image;
+
+        CachedTexture(BufferedImage image)
+        {
+            this.image = image;
+        }
+
+        @Override
+        public void loadTexture(IResourceManager arg0) throws IOException
+        {
+            deleteGlTexture();
+
+            TextureUtil.uploadTextureImageAllocate(getGlTextureId(), image, false, false);
+        }
+
+    }
 
     public static String judgeSkinType(BufferedImage image)
     {
-        if (image.getHeight() == 32)
-            return "legacy";
-        if (((image.getRGB(55, 20) & 0xFF000000) >>> 24) == 0)
-            return "slim";
-        return "default";
+        if (image.getWidth() == 64)
+        {
+            int height = image.getHeight();
+            if (height == 32)
+                return "legacy";
+            else if (height == 64)
+            {
+                if (((image.getRGB(55, 20) & 0xFF000000) >>> 24) == 0)
+                    return "slim";
+                return "default";
+            }
+        }
+        return "unknown";
     }
 
-    public final UUID uuid;
+    public UUID uuid;
+    public String username;
 
     private String type;
-    private boolean uploaded;
+    private BufferedImage image;
+    private ResourceLocation location;
+
+    private CachedTexture texture;
 
     public SkinData()
     {
-        this(UUID.randomUUID());
+        this(new ResourceLocation("skinport", String.format("textures/entity/generated/%s", UUID.randomUUID())));
     }
 
-    public SkinData(UUID uuid)
+    public SkinData(ResourceLocation location)
     {
-        this(uuid, new ResourceLocation("skinport", String.format("textures/entity/%s", uuid)));
+        this.location = location;
     }
 
-    public SkinData(UUID uuid, ResourceLocation location)
+    public void deleteTexture()
     {
-        super(location);
-        this.uuid = uuid;
+        if (texture != null)
+        {
+            texture.deleteGlTexture();
+            texture = null;
+        }
     }
 
     @Override
     public ResourceLocation getSkinLocation()
     {
-        return textureLocation;
+        if (image != null && location != null)
+        {
+            if (texture == null || texture.image != image)
+            {
+                if (texture != null)
+                    texture.deleteGlTexture();
+                Minecraft.getMinecraft().getTextureManager().loadTexture(location, texture = new CachedTexture(image));
+            }
+        }
+        return location;
     }
 
     @Override
@@ -55,12 +102,7 @@ public class SkinData extends SimpleTexture implements ISkin
     @Override
     public boolean isSkinReady()
     {
-        return uploaded;
-    }
-
-    public void put(BufferedImage image)
-    {
-        put(image, null);
+        return image != null;
     }
 
     public void put(BufferedImage image, String type)
@@ -68,16 +110,8 @@ public class SkinData extends SimpleTexture implements ISkin
         if (image != null && type == null)
             type = judgeSkinType(image);
 
-        uploaded = false;
-        deleteGlTexture();
-
         this.type = type;
-
-        if (image != null)
-        {
-            TextureUtil.uploadTextureImage(getGlTextureId(), image);
-            uploaded = true;
-        }
+        this.image = image;
     }
 
 }

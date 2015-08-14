@@ -1,5 +1,6 @@
 package lain.mods.skinport.api;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -12,11 +13,27 @@ import com.google.common.collect.Lists;
 public class SkinProviderAPI
 {
 
+    public static void clearRegistry()
+    {
+        primaryProvider = null;
+        secondaryProviders.clear();
+    }
+
     public static ISkin getDefaultSkin(AbstractClientPlayer player)
     {
         if ((player.getUniqueID().hashCode() & 0x1) == 1)
             return SKIN_ALEX;
         return SKIN_STEVE;
+    }
+
+    public static ISkinProvider getPrimaryProvider()
+    {
+        return primaryProvider;
+    }
+
+    public static List<ISkinProvider> getSecondaryProviders()
+    {
+        return Collections.unmodifiableList(secondaryProviders);
     }
 
     public static ISkin getSkin(AbstractClientPlayer player)
@@ -33,11 +50,6 @@ public class SkinProviderAPI
             }
         }
         return result;
-    }
-
-    public static void register(ISkinProvider provider)
-    {
-        register(provider, false);
     }
 
     public static void register(ISkinProvider provider, boolean primary)
