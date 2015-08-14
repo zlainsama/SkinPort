@@ -86,25 +86,25 @@ public class SkinPort
             {
                 String[] astring = line.split(":");
                 if ("clientFlags".equals(astring[0]))
-                    SkinPort.clientFlags = Integer.parseInt(astring[1]);
+                    clientFlags = Integer.parseInt(astring[1]);
             }
         }
         catch (FileNotFoundException e)
         {
-            SkinPort.clientFlags = SkinCustomization.getDefaultFlags();
+            clientFlags = SkinCustomization.getDefaultFlags();
             saveOptions();
         }
         catch (IOException e)
         {
             System.err.println(String.format("Error loading options: %s", e));
-            SkinPort.clientFlags = SkinCustomization.getDefaultFlags();
+            clientFlags = SkinCustomization.getDefaultFlags();
         }
     }
 
     public static void onPut0(UUID uuid, int value)
     {
-        // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) SkinPort.network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
-        SkinPort.network.sendToAll(new PacketPut1(uuid, value));
+        // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
+        network.sendToAll(new PacketPut1(uuid, value));
     }
 
     @SideOnly(Side.CLIENT)
@@ -116,7 +116,7 @@ public class SkinPort
             ISkin skin = SkinProviderAPI.getSkin(player);
             if (!skin.isSkinReady())
                 skin = SkinProviderAPI.getDefaultSkin(player);
-            Render render = SkinPort.skinMap.get(skin.getSkinType());
+            Render render = skinMap.get(skin.getSkinType());
             if (render != null)
                 return render;
         }
@@ -126,10 +126,7 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void RenderManager_postRenderManagerInit(RenderManager manager)
     {
-        SkinPort.skinMap.put("default", new SkinPortRenderPlayer(false));
-        SkinPort.skinMap.put("slim", new SkinPortRenderPlayer(true));
-
-        for (Render entry : SkinPort.skinMap.values())
+        for (Render entry : skinMap.values())
             entry.setRenderManager(manager);
     }
 
@@ -139,7 +136,7 @@ public class SkinPort
         try
         {
             PrintWriter printwriter = new PrintWriter(new FileWriter(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt")));
-            printwriter.println("clientFlags:" + SkinPort.clientFlags);
+            printwriter.println("clientFlags:" + clientFlags);
             printwriter.close();
         }
         catch (IOException e)
@@ -151,57 +148,65 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void toggleModelPart(SkinCustomization part)
     {
-        if (SkinCustomization.contains(SkinPort.clientFlags, part))
-            SkinPort.clientFlags -= part.getFlag();
+        if (SkinCustomization.contains(clientFlags, part))
+            clientFlags -= part.getFlag();
         else
-            SkinPort.clientFlags += part.getFlag();
-        SkinPort.saveOptions();
+            clientFlags += part.getFlag();
+        saveOptions();
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer != null)
         {
-            clientCache.put(mc.thePlayer.getUniqueID(), SkinPort.clientFlags);
+            clientCache.put(mc.thePlayer.getUniqueID(), clientFlags);
             new PacketGet0().handlePacketClient();
         }
     }
 
     public static final NetworkManager network = new NetworkManager("skinport");
 
-    public static final LoadingCache<UUID, Integer> serverCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<UUID, Integer>()
-    {
-
-        @Override
-        public Integer load(UUID key) throws Exception
-        {
-            EntityPlayerMP player = findPlayer(key);
-            if (player != null)
-                SkinPort.network.sendTo(new PacketGet0(), player);
-            return SkinCustomization.getDefaultFlags();
-        }
-
-    });
-
+    public static LoadingCache<UUID, Integer> serverCache;
     @SideOnly(Side.CLIENT)
-    public static final LoadingCache<UUID, Integer> clientCache = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<UUID, Integer>()
-    {
-
-        @Override
-        public Integer load(UUID key) throws Exception
-        {
-            SkinPort.network.sendToServer(new PacketGet1(key));
-            return SkinCustomization.getDefaultFlags();
-        }
-
-    });
-
+    public static LoadingCache<UUID, Integer> clientCache;
     @SideOnly(Side.CLIENT)
-    public static int clientFlags = SkinCustomization.getDefaultFlags();
-
+    public static Map<String, Render> skinMap;
     @SideOnly(Side.CLIENT)
-    public static final Map<String, Render> skinMap = Maps.newHashMap();
+    public static int clientFlags;
 
     @Mod.EventHandler
     public void init(FMLPreInitializationEvent event)
     {
+        serverCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<UUID, Integer>()
+        {
+
+            @Override
+            public Integer load(UUID key) throws Exception
+            {
+                EntityPlayerMP player = findPlayer(key);
+                if (player != null)
+                    network.sendTo(new PacketGet0(), player);
+                return SkinCustomization.getDefaultFlags();
+            }
+
+        });
+
+        if (event.getSide().isClient())
+        {
+            clientCache = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<UUID, Integer>()
+            {
+
+                @Override
+                public Integer load(UUID key) throws Exception
+                {
+                    network.sendToServer(new PacketGet1(key));
+                    return SkinCustomization.getDefaultFlags();
+                }
+
+            });
+
+            skinMap = Maps.newHashMap();
+            skinMap.put("default", new SkinPortRenderPlayer(false));
+            skinMap.put("slim", new SkinPortRenderPlayer(true));
+        }
+
         network.registerPacket(1, PacketGet0.class);
         network.registerPacket(2, PacketPut0.class);
         network.registerPacket(3, PacketGet1.class);
