@@ -68,7 +68,7 @@ public class MojangSkinProviderService
                         {
                             if (n > 0)
                                 Thread.sleep(1000 * n);
-                            BufferedImage image = ImageIO.read(new URL(String.format("https://skins.minecraft.net/MinecraftSkins/%s.png", data.username)));
+                            BufferedImage image = ImageIO.read(new URL(String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", data.username)));
                             data.put(new LegacyConversion().convert(image), SkinData.judgeSkinType(image));
                             break;
                         }
