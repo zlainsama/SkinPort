@@ -80,6 +80,7 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void loadOptions()
     {
+        clientFlags = SkinCustomization.getDefaultFlags();
         try
         {
             for (String line : Files.readAllLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt").toPath()))
@@ -91,13 +92,11 @@ public class SkinPort
         }
         catch (FileNotFoundException e)
         {
-            clientFlags = SkinCustomization.getDefaultFlags();
             saveOptions();
         }
         catch (IOException e)
         {
             System.err.println(String.format("Error loading options: %s", e));
-            clientFlags = SkinCustomization.getDefaultFlags();
         }
     }
 
