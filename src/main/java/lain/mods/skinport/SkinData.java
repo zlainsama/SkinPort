@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import com.mojang.authlib.GameProfile;
 
 public class SkinData implements ISkin
 {
@@ -50,8 +51,7 @@ public class SkinData implements ISkin
         return "unknown";
     }
 
-    public UUID uuid;
-    public String username;
+    public GameProfile profile;
 
     private String type;
     private BufferedImage image;
