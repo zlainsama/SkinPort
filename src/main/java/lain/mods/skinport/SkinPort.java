@@ -125,6 +125,10 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void RenderManager_postRenderManagerInit(RenderManager manager)
     {
+        skinMap = Maps.newHashMap();
+        skinMap.put("default", new SkinPortRenderPlayer(false));
+        skinMap.put("slim", new SkinPortRenderPlayer(true));
+
         for (Render entry : skinMap.values())
             entry.setRenderManager(manager);
     }
@@ -200,10 +204,6 @@ public class SkinPort
                 }
 
             });
-
-            skinMap = Maps.newHashMap();
-            skinMap.put("default", new SkinPortRenderPlayer(false));
-            skinMap.put("slim", new SkinPortRenderPlayer(true));
         }
 
         network.registerPacket(1, PacketGet0.class);
