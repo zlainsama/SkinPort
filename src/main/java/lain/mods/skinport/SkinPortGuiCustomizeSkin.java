@@ -58,6 +58,7 @@ public class SkinPortGuiCustomizeSkin extends GuiScreen
         super.drawScreen(arg0, arg1, arg2);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui()
     {
