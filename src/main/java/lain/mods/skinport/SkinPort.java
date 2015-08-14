@@ -15,6 +15,8 @@ import lain.mods.skinport.providers.CrafatarSkinProviderService;
 import lain.mods.skinport.providers.MojangSkinProviderService;
 import lain.mods.skinport.providers.UserManagedLocalSkinProviderService;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -50,7 +52,25 @@ public class SkinPort
     }
 
     @SideOnly(Side.CLIENT)
-    public static Render getEntityRenderObject(RenderManager manager, Entity entity, Render value)
+    public static void GuiOptions_postInitGui(GuiOptions gui, List<GuiButton> buttonList)
+    {
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void GuiOptions_preActionPerformed(GuiOptions gui, GuiButton button)
+    {
+
+    }
+
+    public static void onPut0(UUID uuid, int value)
+    {
+        // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) SkinPort.network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
+        SkinPort.network.sendToAll(new PacketPut1(uuid, value));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static Render RenderManager_getEntityRenderObject(RenderManager manager, Entity entity, Render value)
     {
         if (entity instanceof AbstractClientPlayer)
         {
@@ -65,14 +85,8 @@ public class SkinPort
         return value;
     }
 
-    public static void onPut0(UUID uuid, int value)
-    {
-        // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) SkinPort.network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
-        SkinPort.network.sendToAll(new PacketPut1(uuid, value));
-    }
-
     @SideOnly(Side.CLIENT)
-    public static void postRenderManagerInit(RenderManager manager)
+    public static void RenderManager_postRenderManagerInit(RenderManager manager)
     {
         skinMap.put("default", new SkinPortRenderPlayer(false));
         skinMap.put("slim", new SkinPortRenderPlayer(true));
