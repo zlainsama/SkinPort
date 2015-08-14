@@ -11,25 +11,25 @@ public enum SkinCustomization
     right_pants_leg,
     hat;
 
-    public static boolean contains(int value, SkinCustomization... flags)
+    public static boolean contains(int flags, SkinCustomization... parts)
     {
-        return (value & of(flags)) != 0;
+        return (flags & of(parts)) != 0;
     }
 
-    public static int getDefaultValue()
+    public static int getDefaultFlags()
     {
-        return _defaultValue;
+        return _defaultFlags;
     }
 
-    public static int of(SkinCustomization... flags)
+    public static int of(SkinCustomization... parts)
     {
-        int value = 0;
-        for (SkinCustomization flag : flags)
-            value += flag._value;
-        return value;
+        int flags = 0;
+        for (SkinCustomization part : parts)
+            flags += part._flag;
+        return flags;
     }
 
-    private final int _value = (int) Math.pow(2, ordinal());
-    private static final int _defaultValue = of(values());
+    private final int _flag = (int) Math.pow(2, ordinal());
+    private static final int _defaultFlags = of(values());
 
 }

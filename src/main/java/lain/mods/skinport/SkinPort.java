@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.Configuration;
@@ -54,13 +55,19 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void GuiOptions_postInitGui(GuiOptions gui, List<GuiButton> buttonList)
     {
-
+        buttonList.add(new GuiButton(110, gui.width / 2 - 155, gui.height / 6 + 48 - 6, 150, 20, I18n.format("options.skinCustomisation", new Object[0])));
     }
 
     @SideOnly(Side.CLIENT)
     public static void GuiOptions_preActionPerformed(GuiOptions gui, GuiButton button)
     {
-
+        if (!button.enabled)
+            return;
+        if (button.id == 110)
+        {
+            gui.mc.gameSettings.saveOptions();
+            gui.mc.displayGuiScreen(new SkinPortGuiCustomizeSkin(gui));
+        }
     }
 
     public static void onPut0(UUID uuid, int value)
@@ -106,7 +113,7 @@ public class SkinPort
             EntityPlayerMP player = findPlayer(key);
             if (player != null)
                 SkinPort.network.sendTo(new PacketGet0(), player);
-            return SkinCustomization.getDefaultValue();
+            return SkinCustomization.getDefaultFlags();
         }
 
     });
@@ -119,13 +126,13 @@ public class SkinPort
         public Integer load(UUID key) throws Exception
         {
             SkinPort.network.sendToServer(new PacketGet1(key));
-            return SkinCustomization.getDefaultValue();
+            return SkinCustomization.getDefaultFlags();
         }
 
     });
 
     @SideOnly(Side.CLIENT)
-    public static int clientValue = SkinCustomization.getDefaultValue();
+    public static int clientFlags = SkinCustomization.getDefaultFlags();
 
     @SideOnly(Side.CLIENT)
     public static final Map<String, Render> skinMap = Maps.newHashMap();

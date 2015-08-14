@@ -15,7 +15,7 @@ public class PacketGet0 extends NetworkPacket
     @Override
     public void handlePacketClient()
     {
-        SkinPort.network.sendToServer(new PacketPut0(SkinPort.clientValue));
+        SkinPort.network.sendToServer(new PacketPut0(SkinPort.clientFlags));
     }
 
     @Override
