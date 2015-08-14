@@ -13,11 +13,13 @@ import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
 import lain.mods.skinport.providers.CrafatarSkinProviderService;
 import lain.mods.skinport.providers.MojangSkinProviderService;
+import lain.mods.skinport.providers.UserManagedLocalSkinProviderService;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.config.Configuration;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -124,8 +126,11 @@ public class SkinPort
 
         if (event.getSide().isClient())
         {
+            Configuration config = new Configuration(event.getSuggestedConfigurationFile());
             SkinProviderAPI.register(MojangSkinProviderService.createSkinProvider(), true);
-            SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
+            SkinProviderAPI.register(UserManagedLocalSkinProviderService.createSkinProvider(), false);
+            if (config.getBoolean("useCrafatar", Configuration.CATEGORY_GENERAL, true, "add Crafatar as secondary skin provider?"))
+                SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
         }
     }
 
