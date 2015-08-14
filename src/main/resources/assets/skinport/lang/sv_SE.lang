@@ -1,0 +1,9 @@
+options.modelPart.cape=Mantel
+options.modelPart.hat=Hatt
+options.modelPart.jacket=Jacka
+options.modelPart.left_pants_leg=Vänster byxben
+options.modelPart.left_sleeve=Vänster ärm
+options.modelPart.right_pants_leg=Höger byxben
+options.modelPart.right_sleeve=Höger ärm
+options.skinCustomisation=Anpassa utseende...
+options.skinCustomisation.title=Anpassa utseende

@@ -1,0 +1,9 @@
+options.modelPart.cape=Capa
+options.modelPart.hat=Sombrero
+options.modelPart.jacket=Chaqueta
+options.modelPart.left_pants_leg=Pierna izquierda
+options.modelPart.left_sleeve=Manga izquierda
+options.modelPart.right_pants_leg=Pierna derecha
+options.modelPart.right_sleeve=Manga derecha
+options.skinCustomisation=Personalizar el aspecto...
+options.skinCustomisation.title=Personalizar el aspecto

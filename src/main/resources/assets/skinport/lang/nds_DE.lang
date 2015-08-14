@@ -1,0 +1,9 @@
+options.modelPart.cape=Umhang
+options.modelPart.hat=Hood
+options.modelPart.jacket=Jacke
+options.modelPart.left_pants_leg=Linkes Büksenbeen
+options.modelPart.left_sleeve=Linker Arm
+options.modelPart.right_pants_leg=Rächtes Büksenbeen
+options.modelPart.right_sleeve=Rächter Arm
+options.skinCustomisation=Skin-Instellungen...
+options.skinCustomisation.title=Skin-Instellungen

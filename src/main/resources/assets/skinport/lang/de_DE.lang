@@ -1,0 +1,9 @@
+options.modelPart.cape=Umhang
+options.modelPart.hat=Hut
+options.modelPart.jacket=Jacke
+options.modelPart.left_pants_leg=Linkes Hosenbein
+options.modelPart.left_sleeve=Linker Ärmel
+options.modelPart.right_pants_leg=Rechtes Hosenbein
+options.modelPart.right_sleeve=Rechter Ärmel
+options.skinCustomisation=Skin-Anpassung ...
+options.skinCustomisation.title=Skin-Anpassung

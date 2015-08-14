@@ -1,0 +1,9 @@
+options.modelPart.cape=Cape
+options.modelPart.hat=Hoed
+options.modelPart.jacket=Jas
+options.modelPart.left_pants_leg=Linker broekbeen
+options.modelPart.left_sleeve=Linkermouw
+options.modelPart.right_pants_leg=Rechter broekbeen
+options.modelPart.right_sleeve=Rechtermouw
+options.skinCustomisation=Skin personaliseren...
+options.skinCustomisation.title=Skin personaliseren

@@ -1,0 +1,9 @@
+options.modelPart.cape=Capa
+options.modelPart.hat=Chapéu
+options.modelPart.jacket=Casaco
+options.modelPart.left_pants_leg=Perna Esquerda
+options.modelPart.left_sleeve=Manga Esquerda
+options.modelPart.right_pants_leg=Perna Direita
+options.modelPart.right_sleeve=Manga Direita
+options.skinCustomisation=Personalização da Skin...
+options.skinCustomisation.title=Personalização da Skin

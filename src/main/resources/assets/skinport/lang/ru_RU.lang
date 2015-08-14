@@ -1,0 +1,9 @@
+options.modelPart.cape=Плащ
+options.modelPart.hat=Голова
+options.modelPart.jacket=Туловище
+options.modelPart.left_pants_leg=Левая нога
+options.modelPart.left_sleeve=Левая рука
+options.modelPart.right_pants_leg=Правая нога
+options.modelPart.right_sleeve=Правая рука
+options.skinCustomisation=Настройки скина...
+options.skinCustomisation.title=Настройки скина

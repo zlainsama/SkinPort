@@ -1,0 +1,9 @@
+options.modelPart.cape=Mantello
+options.modelPart.hat=Cappello
+options.modelPart.jacket=Giacca
+options.modelPart.left_pants_leg=Gamba sinistra
+options.modelPart.left_sleeve=Manica sinistra
+options.modelPart.right_pants_leg=Gamba destra
+options.modelPart.right_sleeve=Manica destra
+options.skinCustomisation=Personalizzazione skin...
+options.skinCustomisation.title=Personalizzazione della skin

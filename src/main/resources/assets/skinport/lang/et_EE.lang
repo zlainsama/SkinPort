@@ -1,0 +1,9 @@
+options.modelPart.cape=Keep
+options.modelPart.hat=Müts
+options.modelPart.jacket=Jope
+options.modelPart.left_pants_leg=Vasak püksisäär
+options.modelPart.left_sleeve=Vasak varrukas
+options.modelPart.right_pants_leg=Parem püksisäär
+options.modelPart.right_sleeve=Parem varrukas
+options.skinCustomisation=Välimuse kohandamine...
+options.skinCustomisation.title=Välimuse kohandamine

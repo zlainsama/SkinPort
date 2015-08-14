@@ -1,0 +1,9 @@
+options.modelPart.cape=Cape
+options.modelPart.hat=Hat
+options.modelPart.jacket=Jacket
+options.modelPart.left_pants_leg=Left Trousers Leg
+options.modelPart.left_sleeve=Left Sleeve
+options.modelPart.right_pants_leg=Right Trousers Leg
+options.modelPart.right_sleeve=Right Sleeve
+options.skinCustomisation=Skin Customisation...
+options.skinCustomisation.title=Skin Customisation

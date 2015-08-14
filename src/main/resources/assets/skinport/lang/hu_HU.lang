@@ -1,0 +1,9 @@
+options.modelPart.cape=Köpeny
+options.modelPart.hat=Kalap
+options.modelPart.jacket=Kabát
+options.modelPart.left_pants_leg=Bal nadrágszár
+options.modelPart.left_sleeve=Bal ingujj
+options.modelPart.right_pants_leg=Jobb nadrágszár
+options.modelPart.right_sleeve=Jobb ingujj
+options.skinCustomisation=Kinézet testreszabása...
+options.skinCustomisation.title=Kinézet testreszabása

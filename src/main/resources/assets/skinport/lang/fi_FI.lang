@@ -1,0 +1,9 @@
+options.modelPart.cape=Viitta
+options.modelPart.hat=Hattu
+options.modelPart.jacket=Takki
+options.modelPart.left_pants_leg=Vasen lahje
+options.modelPart.left_sleeve=Vasen hiha
+options.modelPart.right_pants_leg=Oikea lahje
+options.modelPart.right_sleeve=Oikea hiha
+options.skinCustomisation=Skinin Mukauttaminen...
+options.skinCustomisation.title=Skinin Mukauttaminen

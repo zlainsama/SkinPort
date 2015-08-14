@@ -1,0 +1,9 @@
+options.modelPart.cape=Capa
+options.modelPart.hat=Sombrero
+options.modelPart.jacket=Saco
+options.modelPart.left_pants_leg=Pierna Izquierda
+options.modelPart.left_sleeve=Manga Izquierda
+options.modelPart.right_pants_leg=Pierna Derecha
+options.modelPart.right_sleeve=Manda Derecha
+options.skinCustomisation=Personalizar Skin...
+options.skinCustomisation.title=Personalizar Skin

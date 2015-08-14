@@ -1,0 +1,9 @@
+options.modelPart.cape=Cape 
+options.modelPart.hat=Chapeau 
+options.modelPart.jacket=Veste 
+options.modelPart.left_pants_leg=Jambe gauche 
+options.modelPart.left_sleeve=Manche gauche 
+options.modelPart.right_pants_leg=Jambe droite 
+options.modelPart.right_sleeve=Manche droite 
+options.skinCustomisation=Personnalisation du skin...
+options.skinCustomisation.title=Personnalisation du skin

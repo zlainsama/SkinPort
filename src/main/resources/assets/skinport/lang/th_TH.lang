@@ -1,0 +1,9 @@
+options.modelPart.cape=เสื้อคลุม
+options.modelPart.hat=หมวก
+options.modelPart.jacket=เสื้อแจกเกต
+options.modelPart.left_pants_leg=ขากางเกงข้างซ้าย
+options.modelPart.left_sleeve=แขนข้างซ้าย
+options.modelPart.right_pants_leg=ขากางเกงข้างขวา
+options.modelPart.right_sleeve=แขนข้างขวา
+options.skinCustomisation=ปรับแต่งสกินเอง...
+options.skinCustomisation.title=ปรับแต่งสกินเอง

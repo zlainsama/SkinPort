@@ -1,0 +1,9 @@
+options.modelPart.cape=Capa
+options.modelPart.hat=Barret
+options.modelPart.jacket=Jaqueta
+options.modelPart.left_pants_leg=Camal esquerra
+options.modelPart.left_sleeve=Màniga esquerra
+options.modelPart.right_pants_leg=Camal dret
+options.modelPart.right_sleeve=Màniga dreta
+options.skinCustomisation=Personalització del personatge...
+options.skinCustomisation.title=Personalització del personatge

@@ -1,0 +1,9 @@
+options.modelPart.cape=Capa
+options.modelPart.hat=Barret
+options.modelPart.jacket=Abric
+options.modelPart.left_pants_leg=Cama esquerra
+options.modelPart.left_sleeve=Mànega esquerra
+options.modelPart.right_pants_leg=Cama dreta
+options.modelPart.right_sleeve=Mànega dreta
+options.skinCustomisation=Personalització de l'aspecte...
+options.skinCustomisation.title=Personalització de l'aspecte

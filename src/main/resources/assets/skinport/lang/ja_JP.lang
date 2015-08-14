@@ -1,0 +1,9 @@
+options.modelPart.cape=マント
+options.modelPart.hat=帽子
+options.modelPart.jacket=ジャケット
+options.modelPart.left_pants_leg=左のズボンの脚
+options.modelPart.left_sleeve=左袖
+options.modelPart.right_pants_leg=右のズボンの脚
+options.modelPart.right_sleeve=右袖
+options.skinCustomisation=スキンのカスタマイズ...
+options.skinCustomisation.title=スキンのカスタマイズ

@@ -1,0 +1,9 @@
+options.modelPart.cape=망토
+options.modelPart.hat=모자
+options.modelPart.jacket=재킷
+options.modelPart.left_pants_leg=왼쪽 바지
+options.modelPart.left_sleeve=왼쪽 소매
+options.modelPart.right_pants_leg=오른쪽 바지
+options.modelPart.right_sleeve=오른쪽 소매
+options.skinCustomisation=스킨 사용자 지정...
+options.skinCustomisation.title=스킨 사용자 지정

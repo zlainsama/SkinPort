@@ -1,0 +1,9 @@
+options.modelPart.cape=披风
+options.modelPart.hat=帽子
+options.modelPart.jacket=衣物
+options.modelPart.left_pants_leg=左裤腿
+options.modelPart.left_sleeve=左袖
+options.modelPart.right_pants_leg=右裤腿
+options.modelPart.right_sleeve=右袖
+options.skinCustomisation=自定义皮肤…
+options.skinCustomisation.title=自定义皮肤
