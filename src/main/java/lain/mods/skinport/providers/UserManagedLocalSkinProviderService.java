@@ -40,7 +40,11 @@ public class UserManagedLocalSkinProviderService
                 if (image == null)
                     return null;
                 SkinData data = new SkinData();
-                data.put(new LegacyConversion().convert(image), SkinData.judgeSkinType(image));
+                String type = SkinData.judgeSkinType(image);
+                if ("legacy".equals(type))
+                    type = "default";
+                image = new LegacyConversion().convert(image);
+                data.put(image, type);
                 return data;
             }
 

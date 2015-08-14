@@ -69,7 +69,11 @@ public class CrafatarSkinProviderService
                             if (n > 0)
                                 Thread.sleep(1000 * n);
                             BufferedImage image = ImageIO.read(new URL(String.format("https://crafatar.com/skins/%s", data.uuid.toString().replaceAll("-", ""))));
-                            data.put(new LegacyConversion().convert(image), SkinData.judgeSkinType(image));
+                            String type = SkinData.judgeSkinType(image);
+                            if ("legacy".equals(type))
+                                type = "default";
+                            image = new LegacyConversion().convert(image);
+                            data.put(image, type);
                             break;
                         }
                         catch (Exception e)
