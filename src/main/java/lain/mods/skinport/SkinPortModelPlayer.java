@@ -103,8 +103,8 @@ public class SkinPortModelPlayer extends ModelBiped
         }
         else
         {
-            if (p_render_1_.isSneaking())
-                GL11.glTranslatef(0.0F, 0.2F, 0.0F);
+            // if (p_render_1_.isSneaking())
+            // GL11.glTranslatef(0.0F, 0.2F, 0.0F);
             bipedLeftLegwear.render(p_render_7_);
             bipedRightLegwear.render(p_render_7_);
             bipedLeftArmwear.render(p_render_7_);
