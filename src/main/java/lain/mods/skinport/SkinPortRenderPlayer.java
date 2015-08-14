@@ -114,6 +114,30 @@ public class SkinPortRenderPlayer extends RenderPlayer
     @Override
     public void renderFirstPersonArm(EntityPlayer player)
     {
+        boolean smHeadwear = modelPlayer.bipedHeadwear.showModel;
+        boolean smLeftLegwear = modelPlayer.bipedLeftLegwear.showModel;
+        boolean smRightLegwear = modelPlayer.bipedRightLegwear.showModel;
+        boolean smLeftArmwear = modelPlayer.bipedLeftArmwear.showModel;
+        boolean smRightArmwear = modelPlayer.bipedRightArmwear.showModel;
+        boolean smBodyWear = modelPlayer.bipedBodyWear.showModel;
+        boolean smCloak = modelPlayer.bipedCloak.showModel;
+
+        int flags = SkinPort.clientCache.getUnchecked(player.getUniqueID());
+        if (modelPlayer.bipedHeadwear.showModel)
+            modelPlayer.bipedHeadwear.showModel = SkinCustomization.contains(flags, SkinCustomization.hat);
+        if (modelPlayer.bipedLeftLegwear.showModel)
+            modelPlayer.bipedLeftLegwear.showModel = SkinCustomization.contains(flags, SkinCustomization.left_pants_leg);
+        if (modelPlayer.bipedRightLegwear.showModel)
+            modelPlayer.bipedRightLegwear.showModel = SkinCustomization.contains(flags, SkinCustomization.right_pants_leg);
+        if (modelPlayer.bipedLeftArmwear.showModel)
+            modelPlayer.bipedLeftArmwear.showModel = SkinCustomization.contains(flags, SkinCustomization.left_sleeve);
+        if (modelPlayer.bipedRightArmwear.showModel)
+            modelPlayer.bipedRightArmwear.showModel = SkinCustomization.contains(flags, SkinCustomization.right_sleeve);
+        if (modelPlayer.bipedBodyWear.showModel)
+            modelPlayer.bipedBodyWear.showModel = SkinCustomization.contains(flags, SkinCustomization.jacket);
+        if (modelPlayer.bipedCloak.showModel)
+            modelPlayer.bipedCloak.showModel = SkinCustomization.contains(flags, SkinCustomization.cape);
+
         // #blameMojang
         Minecraft.getMinecraft().getTextureManager().bindTexture(getEntityTexture(player));
 
@@ -121,6 +145,14 @@ public class SkinPortRenderPlayer extends RenderPlayer
 
         SkinPortModelPlayer.copyModelAngles(modelPlayer.bipedRightArm, modelPlayer.bipedRightArmwear);
         modelPlayer.bipedRightArmwear.render(0.0625F);
+
+        modelPlayer.bipedHeadwear.showModel = smHeadwear;
+        modelPlayer.bipedLeftLegwear.showModel = smLeftLegwear;
+        modelPlayer.bipedRightLegwear.showModel = smRightLegwear;
+        modelPlayer.bipedLeftArmwear.showModel = smLeftArmwear;
+        modelPlayer.bipedRightArmwear.showModel = smRightArmwear;
+        modelPlayer.bipedBodyWear.showModel = smBodyWear;
+        modelPlayer.bipedCloak.showModel = smCloak;
     }
 
 }

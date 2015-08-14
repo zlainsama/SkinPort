@@ -1,5 +1,11 @@
 package lain.mods.skinport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +20,7 @@ import lain.mods.skinport.network.packet.PacketPut1;
 import lain.mods.skinport.providers.CrafatarSkinProviderService;
 import lain.mods.skinport.providers.MojangSkinProviderService;
 import lain.mods.skinport.providers.UserManagedLocalSkinProviderService;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
@@ -70,6 +77,30 @@ public class SkinPort
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void loadOptions()
+    {
+        try
+        {
+            for (String line : Files.readAllLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt").toPath()))
+            {
+                String[] astring = line.split(":");
+                if ("clientFlags".equals(astring[0]))
+                    SkinPort.clientFlags = Integer.parseInt(astring[1]);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            SkinPort.clientFlags = SkinCustomization.getDefaultFlags();
+            saveOptions();
+        }
+        catch (IOException e)
+        {
+            System.err.println(String.format("Error loading options: %s", e));
+            SkinPort.clientFlags = SkinCustomization.getDefaultFlags();
+        }
+    }
+
     public static void onPut0(UUID uuid, int value)
     {
         // EntityPlayerMP player = findPlayer(uuid); if (player != null) { for (EntityPlayer watcher : player.getServerForPlayer().getEntityTracker().getTrackingPlayers(player)) SkinPort.network.sendTo(new PacketPut1(uuid, value), (EntityPlayerMP) watcher); }
@@ -85,7 +116,7 @@ public class SkinPort
             ISkin skin = SkinProviderAPI.getSkin(player);
             if (!skin.isSkinReady())
                 skin = SkinProviderAPI.getDefaultSkin(player);
-            Render render = skinMap.get(skin.getSkinType());
+            Render render = SkinPort.skinMap.get(skin.getSkinType());
             if (render != null)
                 return render;
         }
@@ -95,11 +126,42 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static void RenderManager_postRenderManagerInit(RenderManager manager)
     {
-        skinMap.put("default", new SkinPortRenderPlayer(false));
-        skinMap.put("slim", new SkinPortRenderPlayer(true));
+        SkinPort.skinMap.put("default", new SkinPortRenderPlayer(false));
+        SkinPort.skinMap.put("slim", new SkinPortRenderPlayer(true));
 
-        for (Render entry : skinMap.values())
+        for (Render entry : SkinPort.skinMap.values())
             entry.setRenderManager(manager);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void saveOptions()
+    {
+        try
+        {
+            PrintWriter printwriter = new PrintWriter(new FileWriter(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt")));
+            printwriter.println("clientFlags:" + SkinPort.clientFlags);
+            printwriter.close();
+        }
+        catch (IOException e)
+        {
+            System.err.println(String.format("Error saving options: %s", e));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void toggleModelPart(SkinCustomization part)
+    {
+        if (SkinCustomization.contains(SkinPort.clientFlags, part))
+            SkinPort.clientFlags -= part.getFlag();
+        else
+            SkinPort.clientFlags += part.getFlag();
+        SkinPort.saveOptions();
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer != null)
+        {
+            clientCache.put(mc.thePlayer.getUniqueID(), SkinPort.clientFlags);
+            new PacketGet0().handlePacketClient();
+        }
     }
 
     public static final NetworkManager network = new NetworkManager("skinport");
@@ -153,6 +215,8 @@ public class SkinPort
             SkinProviderAPI.register(UserManagedLocalSkinProviderService.createSkinProvider(), false);
             if (config.getBoolean("useCrafatar", Configuration.CATEGORY_GENERAL, true, "add Crafatar as secondary skin provider?"))
                 SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
+
+            loadOptions();
 
             if (config.hasChanged())
                 config.save();

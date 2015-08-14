@@ -1,5 +1,8 @@
 package lain.mods.skinport;
 
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
+
 public enum SkinCustomization
 {
 
@@ -29,7 +32,18 @@ public enum SkinCustomization
         return flags;
     }
 
+    private final IChatComponent _displayName = new ChatComponentTranslation("options.modelPart." + name(), new Object[0]);
     private final int _flag = (int) Math.pow(2, ordinal());
     private static final int _defaultFlags = of(values());
+
+    public IChatComponent getDisplayName()
+    {
+        return _displayName;
+    }
+
+    public int getFlag()
+    {
+        return _flag;
+    }
 
 }
