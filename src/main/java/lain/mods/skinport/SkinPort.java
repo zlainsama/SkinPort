@@ -127,10 +127,14 @@ public class SkinPort
         if (event.getSide().isClient())
         {
             Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+
             SkinProviderAPI.register(MojangSkinProviderService.createSkinProvider(), true);
             SkinProviderAPI.register(UserManagedLocalSkinProviderService.createSkinProvider(), false);
             if (config.getBoolean("useCrafatar", Configuration.CATEGORY_GENERAL, true, "add Crafatar as secondary skin provider?"))
                 SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
+
+            if (config.hasChanged())
+                config.save();
         }
     }
 
