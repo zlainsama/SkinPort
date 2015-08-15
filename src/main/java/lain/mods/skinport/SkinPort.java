@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -37,6 +38,8 @@ import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -174,6 +177,25 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static int clientFlags;
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void handleClientTicks(TickEvent.ClientTickEvent event)
+    {
+        if (event.phase == TickEvent.Phase.START)
+        {
+            World world = Minecraft.getMinecraft().theWorld;
+            if (world != null && world.playerEntities != null && !world.playerEntities.isEmpty())
+            {
+                for (Object obj : world.playerEntities)
+                {
+                    // This should keep skins loaded.
+                    if (obj instanceof AbstractClientPlayer)
+                        SkinProviderAPI.getSkin((AbstractClientPlayer) obj);
+                }
+            }
+        }
+    }
+
     @Mod.EventHandler
     public void init(FMLPreInitializationEvent event)
     {
@@ -221,6 +243,8 @@ public class SkinPort
                 SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
 
             loadOptions();
+
+            FMLCommonHandler.instance().bus().register(this);
 
             if (config.hasChanged())
                 config.save();
