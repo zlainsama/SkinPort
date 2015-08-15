@@ -17,4 +17,9 @@ public interface ISkin
      */
     boolean isSkinReady();
 
+    /**
+     * You should do your cleanup when this is called
+     */
+    void onRemoval();
+
 }

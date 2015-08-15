@@ -8,6 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 
 public class SkinProviderAPI
@@ -63,7 +65,18 @@ public class SkinProviderAPI
     private static ISkinProvider primaryProvider;
     private static List<ISkinProvider> secondaryProviders = Lists.newArrayList();
 
-    private static final LoadingCache<AbstractClientPlayer, ISkin> primarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(new CacheLoader<AbstractClientPlayer, ISkin>()
+    private static final LoadingCache<AbstractClientPlayer, ISkin> primarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).removalListener(new RemovalListener<AbstractClientPlayer, ISkin>()
+    {
+
+        @Override
+        public void onRemoval(RemovalNotification<AbstractClientPlayer, ISkin> notification)
+        {
+            ISkin skin = notification.getValue();
+            if (skin != null)
+                skin.onRemoval();
+        }
+
+    }).build(new CacheLoader<AbstractClientPlayer, ISkin>()
     {
 
         @Override
@@ -73,7 +86,21 @@ public class SkinProviderAPI
         }
 
     });
-    private static final LoadingCache<AbstractClientPlayer, List<ISkin>> secondarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(new CacheLoader<AbstractClientPlayer, List<ISkin>>()
+    private static final LoadingCache<AbstractClientPlayer, List<ISkin>> secondarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).removalListener(new RemovalListener<AbstractClientPlayer, List<ISkin>>()
+    {
+
+        @Override
+        public void onRemoval(RemovalNotification<AbstractClientPlayer, List<ISkin>> notification)
+        {
+            List<ISkin> list = notification.getValue();
+            if (list != null)
+            {
+                for (ISkin skin : list)
+                    skin.onRemoval();
+            }
+        }
+
+    }).build(new CacheLoader<AbstractClientPlayer, List<ISkin>>()
     {
 
         @Override
@@ -114,6 +141,11 @@ public class SkinProviderAPI
             return true;
         }
 
+        @Override
+        public void onRemoval()
+        {
+        }
+
     };
     public static final ISkin SKIN_ALEX = new ISkin()
     {
@@ -136,6 +168,11 @@ public class SkinProviderAPI
         public boolean isSkinReady()
         {
             return true;
+        }
+
+        @Override
+        public void onRemoval()
+        {
         }
 
     };

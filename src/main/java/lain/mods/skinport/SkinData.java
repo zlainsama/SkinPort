@@ -69,15 +69,6 @@ public class SkinData implements ISkin
         this.location = location;
     }
 
-    public void deleteTexture()
-    {
-        if (texture != null)
-        {
-            texture.deleteGlTexture();
-            texture = null;
-        }
-    }
-
     @Override
     public ResourceLocation getSkinLocation()
     {
@@ -103,6 +94,16 @@ public class SkinData implements ISkin
     public boolean isSkinReady()
     {
         return image != null;
+    }
+
+    @Override
+    public void onRemoval()
+    {
+        if (texture != null)
+        {
+            texture.deleteGlTexture();
+            texture = null;
+        }
     }
 
     public void put(BufferedImage image, String type)
