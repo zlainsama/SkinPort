@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-v3a"
+version = "1.7.10-v3b"
 group= "lain.mods.skinport"
 archivesBaseName = "SkinPort"
 
@@ -53,3 +53,6 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'

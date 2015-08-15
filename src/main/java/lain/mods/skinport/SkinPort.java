@@ -31,6 +31,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
+import com.google.common.base.Charsets;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -86,7 +87,7 @@ public class SkinPort
         clientFlags = SkinCustomization.getDefaultFlags();
         try
         {
-            for (String line : Files.readAllLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt").toPath()))
+            for (String line : Files.readAllLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt").toPath(), Charsets.UTF_8))
             {
                 String[] astring = line.split(":");
                 if ("clientFlags".equals(astring[0]))
