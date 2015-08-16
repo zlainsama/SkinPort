@@ -34,7 +34,7 @@ public class CrafatarSkinProviderService
                     @Override
                     public void run()
                     {
-                        String url = String.format("https://crafatar.com/skins/%s", data.profile.getId().toString().replaceAll("-", ""));
+                        String url = String.format("https://crafatar.com/skins/%s", data.profile.getId());
                         boolean flag = false;
                         for (int n = 0; n < 5; n++)
                         {
