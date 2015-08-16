@@ -141,9 +141,8 @@ public class SkinPortRenderPlayer extends RenderPlayer
         // #blameMojang
         Minecraft.getMinecraft().getTextureManager().bindTexture(getEntityTexture(player));
 
+        modelPlayer.isRiding = modelPlayer.isSneak = false;
         super.renderFirstPersonArm(player);
-
-        SkinPortModelPlayer.copyModelAngles(modelPlayer.bipedRightArm, modelPlayer.bipedRightArmwear);
         modelPlayer.bipedRightArmwear.render(0.0625F);
 
         modelPlayer.bipedHeadwear.showModel = smHeadwear;
