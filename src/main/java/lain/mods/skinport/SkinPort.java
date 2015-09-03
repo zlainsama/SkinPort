@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +31,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.io.FileUtils;
 import com.google.common.base.Charsets;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -89,7 +89,7 @@ public class SkinPort
         clientFlags = SkinCustomization.getDefaultFlags();
         try
         {
-            for (String line : Files.readAllLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt").toPath(), Charsets.UTF_8))
+            for (String line : FileUtils.readLines(new File(Minecraft.getMinecraft().mcDataDir, "options_skinport.txt"), Charsets.UTF_8))
             {
                 String[] astring = line.split(":");
                 if ("clientFlags".equals(astring[0]))
