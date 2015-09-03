@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.SkinProviderAPI;
+import lain.mods.skinport.compat.SkinPortRenderPlayer_RPA;
 import lain.mods.skinport.network.NetworkManager;
 import lain.mods.skinport.network.packet.PacketGet0;
 import lain.mods.skinport.network.packet.PacketGet1;
@@ -37,6 +38,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -130,8 +132,17 @@ public class SkinPort
     public static void RenderManager_postRenderManagerInit(RenderManager manager)
     {
         skinMap = Maps.newHashMap();
-        skinMap.put("default", new SkinPortRenderPlayer(false));
-        skinMap.put("slim", new SkinPortRenderPlayer(true));
+
+        if (Loader.isModLoaded("RenderPlayerAPI")) // Compatibility with RenderPlayerAPI
+        {
+            skinMap.put("default", new SkinPortRenderPlayer_RPA(false));
+            skinMap.put("slim", new SkinPortRenderPlayer_RPA(true));
+        }
+        else
+        {
+            skinMap.put("default", new SkinPortRenderPlayer(false));
+            skinMap.put("slim", new SkinPortRenderPlayer(true));
+        }
 
         for (Render entry : skinMap.values())
             entry.setRenderManager(manager);
