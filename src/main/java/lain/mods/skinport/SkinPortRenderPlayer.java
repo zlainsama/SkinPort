@@ -143,7 +143,6 @@ public class SkinPortRenderPlayer extends RenderPlayer
 
         modelPlayer.isRiding = modelPlayer.isSneak = false;
         super.renderFirstPersonArm(player);
-        modelPlayer.bipedRightArmwear.render(0.0625F);
 
         modelPlayer.bipedHeadwear.showModel = smHeadwear;
         modelPlayer.bipedLeftLegwear.showModel = smLeftLegwear;
