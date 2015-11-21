@@ -50,19 +50,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class SkinPort
 {
 
-    @SuppressWarnings("unchecked")
     public static EntityPlayerMP findPlayer(UUID uuid)
     {
-        try
-        {
-            for (EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList)
-                if (uuid.equals(player.getUniqueID()))
-                    return player;
-        }
-        catch (Exception e)
-        {
-        }
-        return null;
+        return PlayerUtils.findPlayer(uuid);
     }
 
     @SideOnly(Side.CLIENT)
@@ -174,7 +164,7 @@ public class SkinPort
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer != null)
         {
-            clientCache.put(mc.thePlayer.getUniqueID(), clientFlags);
+            clientCache.put(PlayerUtils.getPlayerID(mc.thePlayer), clientFlags);
             new PacketGet0().handlePacketClient();
         }
     }
@@ -211,6 +201,8 @@ public class SkinPort
     @Mod.EventHandler
     public void init(FMLPreInitializationEvent event)
     {
+        PlayerUtils.registerListener();
+
         serverCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<UUID, Integer>()
         {
 

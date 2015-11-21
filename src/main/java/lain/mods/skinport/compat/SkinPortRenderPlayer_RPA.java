@@ -1,5 +1,6 @@
 package lain.mods.skinport.compat;
 
+import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinCustomization;
 import lain.mods.skinport.SkinPort;
 import lain.mods.skinport.api.ISkin;
@@ -36,7 +37,7 @@ public class SkinPortRenderPlayer_RPA extends RenderPlayer
         boolean smBodyWear = modelPlayer.bipedBodyWear.showModel;
         boolean smCloak = modelPlayer.bipedCloak.showModel;
 
-        int flags = SkinPort.clientCache.getUnchecked(p_76986_1_.getUniqueID());
+        int flags = SkinPort.clientCache.getUnchecked(PlayerUtils.getPlayerID(p_76986_1_));
         if (modelPlayer.bipedHeadwear.showModel)
             modelPlayer.bipedHeadwear.showModel = SkinCustomization.contains(flags, SkinCustomization.hat);
         if (modelPlayer.bipedLeftLegwear.showModel)
@@ -83,7 +84,7 @@ public class SkinPortRenderPlayer_RPA extends RenderPlayer
         boolean smBodyWear = modelPlayer.bipedBodyWear.showModel;
         boolean smCloak = modelPlayer.bipedCloak.showModel;
 
-        int flags = SkinPort.clientCache.getUnchecked(p_77029_1_.getUniqueID());
+        int flags = SkinPort.clientCache.getUnchecked(PlayerUtils.getPlayerID(p_77029_1_));
         if (modelPlayer.bipedHeadwear.showModel)
             modelPlayer.bipedHeadwear.showModel = SkinCustomization.contains(flags, SkinCustomization.hat);
         if (modelPlayer.bipedLeftLegwear.showModel)
@@ -121,7 +122,7 @@ public class SkinPortRenderPlayer_RPA extends RenderPlayer
         boolean smBodyWear = modelPlayer.bipedBodyWear.showModel;
         boolean smCloak = modelPlayer.bipedCloak.showModel;
 
-        int flags = SkinPort.clientCache.getUnchecked(player.getUniqueID());
+        int flags = SkinPort.clientCache.getUnchecked(PlayerUtils.getPlayerID(player));
         if (modelPlayer.bipedHeadwear.showModel)
             modelPlayer.bipedHeadwear.showModel = SkinCustomization.contains(flags, SkinCustomization.hat);
         if (modelPlayer.bipedLeftLegwear.showModel)

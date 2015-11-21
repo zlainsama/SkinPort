@@ -3,6 +3,7 @@ package lain.mods.skinport.api;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import lain.mods.skinport.PlayerUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
 import com.google.common.cache.CacheBuilder;
@@ -23,7 +24,7 @@ public class SkinProviderAPI
 
     public static ISkin getDefaultSkin(AbstractClientPlayer player)
     {
-        if ((player.getUniqueID().hashCode() & 0x1) == 1)
+        if ((PlayerUtils.getPlayerID(player).hashCode() & 0x1) == 1)
             return SKIN_ALEX;
         return SKIN_STEVE;
     }

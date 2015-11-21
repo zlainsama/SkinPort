@@ -3,12 +3,14 @@ package lain.mods.skinport.providers;
 import java.awt.image.BufferedImage;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import lain.mods.skinport.LegacyConversion;
+import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinData;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
@@ -34,32 +36,34 @@ public class CrafatarSkinProviderService
                     @Override
                     public void run()
                     {
+                        UUID uuid = data.profile.getId();
                         String url = String.format("https://crafatar.com/skins/%s", data.profile.getId());
                         boolean flag = false;
-                        for (int n = 0; n < 5; n++)
-                        {
-                            try
+                        if (!PlayerUtils.isOfflineID(uuid))
+                            for (int n = 0; n < 5; n++)
                             {
-                                if (n > 0)
-                                    Thread.sleep(1000 * n);
-                                HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection(Minecraft.getMinecraft().getProxy());
-                                conn.connect();
-                                if (conn.getResponseCode() / 100 == 2)
+                                try
                                 {
-                                    BufferedImage image = ImageIO.read(conn.getInputStream());
-                                    String type = SkinData.judgeSkinType(image);
-                                    if ("legacy".equals(type))
-                                        type = "default";
-                                    image = new LegacyConversion().convert(image);
-                                    data.put(image, type);
-                                    flag = true;
-                                    break;
+                                    if (n > 0)
+                                        Thread.sleep(1000 * n);
+                                    HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection(Minecraft.getMinecraft().getProxy());
+                                    conn.connect();
+                                    if (conn.getResponseCode() / 100 == 2)
+                                    {
+                                        BufferedImage image = ImageIO.read(conn.getInputStream());
+                                        String type = SkinData.judgeSkinType(image);
+                                        if ("legacy".equals(type))
+                                            type = "default";
+                                        image = new LegacyConversion().convert(image);
+                                        data.put(image, type);
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
                                 }
                             }
-                            catch (Exception e)
-                            {
-                            }
-                        }
                         if (!flag)
                         {
                             url = String.format("https://crafatar.com/skins/%s", data.profile.getName());

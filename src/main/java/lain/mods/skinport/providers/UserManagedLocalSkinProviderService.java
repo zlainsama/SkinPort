@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import lain.mods.skinport.LegacyConversion;
+import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinData;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
@@ -34,7 +35,7 @@ public class UserManagedLocalSkinProviderService
             @Override
             public ISkin getSkin(AbstractClientPlayer player)
             {
-                BufferedImage image = readImage(String.format("skins/uuid/%s.png", player.getUniqueID().toString().replaceAll("-", "")));
+                BufferedImage image = readImage(String.format("skins/uuid/%s.png", PlayerUtils.getPlayerID(player).toString().replaceAll("-", "")));
                 if (image == null)
                     image = readImage(String.format("skins/%s.png", StringUtils.stripControlCodes(player.getCommandSenderName())));
                 if (image == null)
