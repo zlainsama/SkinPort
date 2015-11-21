@@ -41,6 +41,8 @@ public class SkinProviderAPI
 
     public static ISkin getSkin(AbstractClientPlayer player)
     {
+        PlayerUtils.getPlayerID(player); // make sure offline info for this player is cached.
+
         ISkin result = primarySkinCache.getUnchecked(player);
         if (result.isSkinReady())
             return result;
