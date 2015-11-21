@@ -19,7 +19,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServer
 public class PlayerUtils
 {
 
-    static class EventListener
+    public static class EventListener
     {
 
         @SubscribeEvent
