@@ -37,7 +37,7 @@ public class CrafatarSkinProviderService
                     public void run()
                     {
                         UUID uuid = data.profile.getId();
-                        String url = String.format("https://crafatar.com/skins/%s", data.profile.getId());
+                        String url = String.format("https://crafatar.com/skins/%s", uuid);
                         boolean flag = false;
                         if (!PlayerUtils.isOfflineID(uuid))
                             for (int n = 0; n < 5; n++)
