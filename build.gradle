@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-v5b"
+version = "1.7.10-v6"
 group= "lain.mods.skinport"
 archivesBaseName = "SkinPort"
 
