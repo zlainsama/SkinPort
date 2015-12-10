@@ -9,8 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class SkinPortRenderPlayer_RPA extends RenderPlayer
 {
@@ -138,8 +140,10 @@ public class SkinPortRenderPlayer_RPA extends RenderPlayer
         if (modelPlayer.bipedCloak.showModel)
             modelPlayer.bipedCloak.showModel = SkinCustomization.contains(flags, SkinCustomization.cape);
 
-        // #blameMojang
-        Minecraft.getMinecraft().getTextureManager().bindTexture(getEntityTexture(player));
+        int tid = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+        ITextureObject itobj = Minecraft.getMinecraft().getTextureManager().getTexture(((AbstractClientPlayer) player).getLocationSkin());
+        if (itobj != null && itobj.getGlTextureId() == tid)
+            Minecraft.getMinecraft().getTextureManager().bindTexture(getEntityTexture(player)); // #blameMojang
 
         modelPlayer.isRiding = modelPlayer.isSneak = false;
         super.renderFirstPersonArm(player);
