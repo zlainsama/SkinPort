@@ -1,9 +1,9 @@
 package lain.mods.skinport.api;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lain.mods.skinport.PlayerUtils;
+import lain.mods.skinport.SkinPort;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
 import com.google.common.cache.CacheBuilder;
@@ -16,10 +16,80 @@ import com.google.common.collect.Lists;
 public class SkinProviderAPI
 {
 
-    public static void clearRegistry()
+    public static ISkinProviderService createService()
     {
-        primaryProvider = null;
-        secondaryProviders.clear();
+        return new ISkinProviderService()
+        {
+
+            private final List<ISkinProvider> providers = Lists.newArrayList();
+            private final LoadingCache<AbstractClientPlayer, List<ISkin>> cache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).removalListener(new RemovalListener<AbstractClientPlayer, List<ISkin>>()
+            {
+
+                @Override
+                public void onRemoval(RemovalNotification<AbstractClientPlayer, List<ISkin>> notification)
+                {
+                    List<ISkin> list = notification.getValue();
+                    if (list != null)
+                    {
+                        for (ISkin skin : list)
+                            skin.onRemoval();
+                    }
+                }
+
+            }).build(new CacheLoader<AbstractClientPlayer, List<ISkin>>()
+            {
+
+                @Override
+                public List<ISkin> load(AbstractClientPlayer key) throws Exception
+                {
+                    List<ISkin> list = Lists.newArrayList();
+                    for (ISkinProvider p : providers)
+                    {
+                        ISkin s = p.getSkin(key);
+                        if (s != null)
+                            list.add(s);
+                    }
+                    return list;
+                }
+
+            });
+
+            @Override
+            public void clear()
+            {
+                providers.clear();
+                cache.invalidateAll();
+            }
+
+            @Override
+            public ISkin getSkin(AbstractClientPlayer player)
+            {
+                List<ISkin> list = cache.getUnchecked(player);
+                for (ISkin skin : list)
+                {
+                    if (skin.isSkinReady())
+                        return skin;
+                }
+                return null;
+            }
+
+            @Override
+            public void register(ISkinProvider provider)
+            {
+                if (provider == null || provider == this)
+                    throw new UnsupportedOperationException();
+                providers.add(provider);
+            }
+
+        };
+    }
+
+    public static ISkin getCape(AbstractClientPlayer player)
+    {
+        PlayerUtils.getPlayerID(player); // make sure offline info for this player is cached.
+        if (SkinPort.capeService != null)
+            return SkinPort.capeService.getSkin(player);
+        return null;
     }
 
     public static ISkin getDefaultSkin(AbstractClientPlayer player)
@@ -29,97 +99,13 @@ public class SkinProviderAPI
         return SKIN_STEVE;
     }
 
-    public static ISkinProvider getPrimaryProvider()
-    {
-        return primaryProvider;
-    }
-
-    public static List<ISkinProvider> getSecondaryProviders()
-    {
-        return Collections.unmodifiableList(secondaryProviders);
-    }
-
     public static ISkin getSkin(AbstractClientPlayer player)
     {
         PlayerUtils.getPlayerID(player); // make sure offline info for this player is cached.
-
-        ISkin result = primarySkinCache.getUnchecked(player);
-        if (result.isSkinReady())
-            return result;
-        for (ISkin s : secondarySkinCache.getUnchecked(player))
-        {
-            if (s.isSkinReady())
-            {
-                result = s;
-                break;
-            }
-        }
-        return result;
+        if (SkinPort.skinService != null)
+            return SkinPort.skinService.getSkin(player);
+        return null;
     }
-
-    public static void register(ISkinProvider provider, boolean primary)
-    {
-        if (primary)
-            primaryProvider = provider;
-        else
-            secondaryProviders.add(provider);
-    }
-
-    private static ISkinProvider primaryProvider;
-    private static List<ISkinProvider> secondaryProviders = Lists.newArrayList();
-
-    private static final LoadingCache<AbstractClientPlayer, ISkin> primarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).removalListener(new RemovalListener<AbstractClientPlayer, ISkin>()
-    {
-
-        @Override
-        public void onRemoval(RemovalNotification<AbstractClientPlayer, ISkin> notification)
-        {
-            ISkin skin = notification.getValue();
-            if (skin != null)
-                skin.onRemoval();
-        }
-
-    }).build(new CacheLoader<AbstractClientPlayer, ISkin>()
-    {
-
-        @Override
-        public ISkin load(AbstractClientPlayer key) throws Exception
-        {
-            return primaryProvider.getSkin(key);
-        }
-
-    });
-    private static final LoadingCache<AbstractClientPlayer, List<ISkin>> secondarySkinCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).removalListener(new RemovalListener<AbstractClientPlayer, List<ISkin>>()
-    {
-
-        @Override
-        public void onRemoval(RemovalNotification<AbstractClientPlayer, List<ISkin>> notification)
-        {
-            List<ISkin> list = notification.getValue();
-            if (list != null)
-            {
-                for (ISkin skin : list)
-                    skin.onRemoval();
-            }
-        }
-
-    }).build(new CacheLoader<AbstractClientPlayer, List<ISkin>>()
-    {
-
-        @Override
-        public List<ISkin> load(AbstractClientPlayer key) throws Exception
-        {
-            List<ISkin> list = Lists.newArrayList();
-            for (ISkinProvider p : secondaryProviders)
-            {
-                ISkin s = p.getSkin(key);
-                if (s != null)
-                    list.add(s);
-            }
-            return list;
-        }
-
-    });
 
     public static final ISkin SKIN_STEVE = new ISkin()
     {

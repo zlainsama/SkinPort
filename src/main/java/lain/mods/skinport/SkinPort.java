@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lain.mods.skinport.api.ISkin;
+import lain.mods.skinport.api.ISkinProviderService;
 import lain.mods.skinport.api.SkinProviderAPI;
 import lain.mods.skinport.compat.SkinPortRenderPlayer_RPA;
 import lain.mods.skinport.network.NetworkManager;
@@ -17,11 +18,16 @@ import lain.mods.skinport.network.packet.PacketGet0;
 import lain.mods.skinport.network.packet.PacketGet1;
 import lain.mods.skinport.network.packet.PacketPut0;
 import lain.mods.skinport.network.packet.PacketPut1;
-import lain.mods.skinport.providers.CrafatarSkinProviderService;
-import lain.mods.skinport.providers.MojangSkinProviderService;
-import lain.mods.skinport.providers.UserManagedLocalSkinProviderService;
+import lain.mods.skinport.providers.CrafatarCachedCapeProvider;
+import lain.mods.skinport.providers.CrafatarCachedSkinProvider;
+import lain.mods.skinport.providers.MojangCachedCapeProvider;
+import lain.mods.skinport.providers.MojangCachedSkinProvider;
+import lain.mods.skinport.providers.UserManagedCapeProvider;
+import lain.mods.skinport.providers.UserManagedSkinProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.renderer.entity.Render;
@@ -29,6 +35,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
@@ -56,6 +63,29 @@ public class SkinPort
     }
 
     @SideOnly(Side.CLIENT)
+    public static ResourceLocation getLocationCape(AbstractClientPlayer player, ResourceLocation result)
+    {
+        if (result == null)
+        {
+            ISkin cape = SkinProviderAPI.getCape(player);
+            if (cape != null && cape.isSkinReady())
+                return cape.getSkinLocation();
+        }
+        return result;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ResourceLocation getLocationSkin(AbstractClientPlayer player, ResourceLocation result)
+    {
+        ISkin skin = SkinProviderAPI.getSkin(player);
+        if (skin == null || !skin.isSkinReady())
+            skin = SkinProviderAPI.getDefaultSkin(player);
+        if (skin != null && skin.isSkinReady())
+            return skin.getSkinLocation();
+        return result;
+    }
+
+    @SideOnly(Side.CLIENT)
     public static void GuiOptions_postInitGui(GuiOptions gui, List<GuiButton> buttonList)
     {
         buttonList.add(new GuiButton(110, gui.width / 2 - 155, gui.height / 6 + 48 - 6, 150, 20, I18n.format("options.skinCustomisation", new Object[0])));
@@ -71,6 +101,12 @@ public class SkinPort
             gui.mc.gameSettings.saveOptions();
             gui.mc.displayGuiScreen(new SkinPortGuiCustomizeSkin(gui));
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static boolean hasCape(AbstractClientPlayer player, boolean result)
+    {
+        return player.getLocationCape() != null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -105,11 +141,11 @@ public class SkinPort
     @SideOnly(Side.CLIENT)
     public static Render RenderManager_getEntityRenderObject(RenderManager manager, Entity entity, Render value)
     {
-        if (entity instanceof AbstractClientPlayer)
+        if (entity instanceof EntityClientPlayerMP || entity instanceof EntityOtherPlayerMP)
         {
             AbstractClientPlayer player = (AbstractClientPlayer) entity;
             ISkin skin = SkinProviderAPI.getSkin(player);
-            if (!skin.isSkinReady())
+            if (skin == null || !skin.isSkinReady())
                 skin = SkinProviderAPI.getDefaultSkin(player);
             Render render = skinMap.get(skin.getSkinType());
             if (render != null)
@@ -180,9 +216,17 @@ public class SkinPort
     public static int clientFlags;
 
     @SideOnly(Side.CLIENT)
+    public static ISkinProviderService skinService;
+    @SideOnly(Side.CLIENT)
+    public static ISkinProviderService capeService;
+
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void handleClientTicks(TickEvent.ClientTickEvent event)
     {
+        if (skinService == null && capeService == null)
+            return;
+
         if (event.phase == TickEvent.Phase.START)
         {
             World world = Minecraft.getMinecraft().theWorld;
@@ -190,9 +234,14 @@ public class SkinPort
             {
                 for (Object obj : world.playerEntities)
                 {
-                    // This should keep skins loaded.
+                    // This should keep skins/capes loaded.
                     if (obj instanceof AbstractClientPlayer)
-                        SkinProviderAPI.getSkin((AbstractClientPlayer) obj);
+                    {
+                        if (skinService != null)
+                            skinService.getSkin((AbstractClientPlayer) obj);
+                        if (capeService != null)
+                            capeService.getSkin((AbstractClientPlayer) obj);
+                    }
                 }
             }
         }
@@ -240,18 +289,25 @@ public class SkinPort
         if (event.getSide().isClient())
         {
             Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+            boolean useCrafatar = config.getBoolean("useCrafatar", Configuration.CATEGORY_GENERAL, true, "add Crafatar as secondary skin/cape provider?");
+            if (config.hasChanged())
+                config.save();
 
-            SkinProviderAPI.register(MojangSkinProviderService.createSkinProvider(), true);
-            SkinProviderAPI.register(UserManagedLocalSkinProviderService.createSkinProvider(), false);
-            if (config.getBoolean("useCrafatar", Configuration.CATEGORY_GENERAL, true, "add Crafatar as secondary skin provider?"))
-                SkinProviderAPI.register(CrafatarSkinProviderService.createSkinProvider(), false);
+            skinService = SkinProviderAPI.createService();
+            capeService = SkinProviderAPI.createService();
+
+            skinService.register(new MojangCachedSkinProvider());
+            skinService.register(new UserManagedSkinProvider());
+            if (useCrafatar)
+                skinService.register(new CrafatarCachedSkinProvider());
+            capeService.register(new MojangCachedCapeProvider());
+            capeService.register(new UserManagedCapeProvider());
+            if (useCrafatar)
+                capeService.register(new CrafatarCachedCapeProvider());
 
             loadOptions();
 
             FMLCommonHandler.instance().bus().register(this);
-
-            if (config.hasChanged())
-                config.save();
         }
     }
 

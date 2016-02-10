@@ -148,6 +148,101 @@ public class ASMTransformer implements IClassTransformer
 
     }
 
+    class transformer003 extends ClassVisitor
+    {
+
+        class method001 extends MethodVisitor
+        {
+
+            public method001(MethodVisitor mv)
+            {
+                super(Opcodes.ASM5, mv);
+            }
+
+            @Override
+            public void visitInsn(int opcode)
+            {
+                if (opcode == Opcodes.ARETURN)
+                {
+                    this.visitVarInsn(Opcodes.ASTORE, 1);
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitVarInsn(Opcodes.ALOAD, 1);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/asm/Hooks", "getLocationCape", "(Lnet/minecraft/client/entity/AbstractClientPlayer;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraft/util/ResourceLocation;", false);
+                }
+                super.visitInsn(opcode);
+            }
+
+        }
+
+        class method002 extends MethodVisitor
+        {
+
+            public method002(MethodVisitor mv)
+            {
+                super(Opcodes.ASM5, mv);
+            }
+
+            @Override
+            public void visitInsn(int opcode)
+            {
+                if (opcode == Opcodes.ARETURN)
+                {
+                    this.visitVarInsn(Opcodes.ASTORE, 1);
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitVarInsn(Opcodes.ALOAD, 1);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/asm/Hooks", "getLocationSkin", "(Lnet/minecraft/client/entity/AbstractClientPlayer;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraft/util/ResourceLocation;", false);
+                }
+                super.visitInsn(opcode);
+            }
+
+        }
+
+        class method003 extends MethodVisitor
+        {
+
+            public method003(MethodVisitor mv)
+            {
+                super(Opcodes.ASM5, mv);
+            }
+
+            @Override
+            public void visitInsn(int opcode)
+            {
+                if (opcode == Opcodes.IRETURN)
+                {
+                    this.visitVarInsn(Opcodes.ISTORE, 1);
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitVarInsn(Opcodes.ILOAD, 1);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/asm/Hooks", "hasCape", "(Lnet/minecraft/client/entity/AbstractClientPlayer;Z)Z", false);
+                }
+                super.visitInsn(opcode);
+            }
+
+        }
+
+        ObfHelper m001 = ObfHelper.newMethod("func_110303_q", "net/minecraft/client/entity/AbstractClientPlayer", "()Lnet/minecraft/util/ResourceLocation;").setDevName("getLocationCape");
+        ObfHelper m002 = ObfHelper.newMethod("func_110306_p", "net/minecraft/client/entity/AbstractClientPlayer", "()Lnet/minecraft/util/ResourceLocation;").setDevName("getLocationSkin");
+        ObfHelper m003 = ObfHelper.newMethod("func_152122_n", "net/minecraft/client/entity/AbstractClientPlayer", "()Z"); // cape check
+
+        public transformer003(ClassVisitor cv)
+        {
+            super(Opcodes.ASM5, cv);
+        }
+
+        @Override
+        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
+        {
+            if (m001.match(name, desc))
+                return new method001(super.visitMethod(access, name, desc, signature, exceptions));
+            if (m002.match(name, desc))
+                return new method002(super.visitMethod(access, name, desc, signature, exceptions));
+            if (m003.match(name, desc))
+                return new method003(super.visitMethod(access, name, desc, signature, exceptions));
+            return super.visitMethod(access, name, desc, signature, exceptions);
+        }
+
+    }
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes)
     {
@@ -155,6 +250,8 @@ public class ASMTransformer implements IClassTransformer
             return transform001(bytes);
         if ("net.minecraft.client.gui.GuiOptions".equals(transformedName))
             return transform002(bytes);
+        if ("net.minecraft.client.entity.AbstractClientPlayer".equals(transformedName))
+            return transform003(bytes);
         return bytes;
     }
 
@@ -171,6 +268,14 @@ public class ASMTransformer implements IClassTransformer
         ClassReader classReader = new ClassReader(bytes);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classReader.accept(new transformer002(classWriter), ClassReader.EXPAND_FRAMES);
+        return classWriter.toByteArray();
+    }
+
+    private byte[] transform003(byte[] bytes)
+    {
+        ClassReader classReader = new ClassReader(bytes);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classReader.accept(new transformer003(classWriter), ClassReader.EXPAND_FRAMES);
         return classWriter.toByteArray();
     }
 

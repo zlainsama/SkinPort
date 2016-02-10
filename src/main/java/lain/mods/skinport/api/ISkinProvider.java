@@ -7,7 +7,7 @@ public interface ISkinProvider
 
     /**
      * @param player
-     * @return You can only return null when this provider is registered as secondary providers.
+     * @return You can return null if no result.
      */
     ISkin getSkin(AbstractClientPlayer player);
 

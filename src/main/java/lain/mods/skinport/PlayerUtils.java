@@ -100,6 +100,11 @@ public class PlayerUtils
         return offlineIDs.contains(uuid);
     }
 
+    public static boolean isOfflinePlayer(EntityPlayer player)
+    {
+        return isOfflineID(getPlayerID(player));
+    }
+
     public static void registerListener()
     {
         EventListener listener = new EventListener();
