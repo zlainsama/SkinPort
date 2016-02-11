@@ -23,6 +23,10 @@ public class SkinPortModelPlayer extends ModelBiped
 
         this.smallArms = smallArms;
 
+        bipedCloak = new ModelRenderer(this, 0, 0);
+        bipedCloak.setTextureSize(64, 32);
+        bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, z);
+
         if (smallArms)
         {
             bipedLeftArm = new ModelRenderer(this, 32, 48);
