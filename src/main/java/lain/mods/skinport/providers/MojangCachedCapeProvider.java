@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.imageio.ImageIO;
+import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinData;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
@@ -45,12 +46,16 @@ public class MojangCachedCapeProvider implements ISkinProvider
     {
         final SkinData data = new SkinData();
         data.profile = player.getGameProfile();
+        final boolean flag = PlayerUtils.isOfflinePlayer(player);
         pool.execute(new Runnable()
         {
 
             @Override
             public void run()
             {
+                if (flag)
+                    data.profile = MojangService.getProfile(data.profile.getName(), data.profile);
+
                 BufferedImage image = null;
                 UUID uuid = data.profile.getId();
 
@@ -196,7 +201,7 @@ public class MojangCachedCapeProvider implements ISkinProvider
                 FileUtils.copyInputStreamToFile(conn.getInputStream(), file1);
                 if (etag != null)
                     FileUtils.writeStringToFile(file2, etag, "UTF-8");
-                if (t > -1)
+                if (t > 0)
                     FileUtils.writeStringToFile(file3, Long.toString(t), "UTF-8");
             }
             catch (IOException e)
