@@ -1,7 +1,7 @@
 package lain.mods.skinport.network.packet;
 
-import io.netty.buffer.ByteBuf;
 import java.util.UUID;
+import io.netty.buffer.ByteBuf;
 import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinPort;
 import lain.mods.skinport.network.NetworkPacket;

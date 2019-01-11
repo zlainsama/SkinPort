@@ -3,12 +3,12 @@ package lain.mods.skinport.providers;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
+import org.apache.commons.lang3.ObjectUtils;
 import lain.mods.skinport.SkinData;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import org.apache.commons.lang3.ObjectUtils;
 
 public class UserManagedCapeProvider implements ISkinProvider
 {

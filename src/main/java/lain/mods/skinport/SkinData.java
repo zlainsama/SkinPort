@@ -3,13 +3,13 @@ package lain.mods.skinport;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.UUID;
+import com.mojang.authlib.GameProfile;
 import lain.mods.skinport.api.ISkin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import com.mojang.authlib.GameProfile;
 
 public class SkinData implements ISkin
 {

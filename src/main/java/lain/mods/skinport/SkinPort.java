@@ -9,6 +9,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.io.FileUtils;
+import com.google.common.base.Charsets;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Maps;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProviderService;
 import lain.mods.skinport.api.SkinProviderAPI;
@@ -38,24 +52,25 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
-import org.apache.commons.io.FileUtils;
-import com.google.common.base.Charsets;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Maps;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = "skinport", useMetadata = true)
 public class SkinPort
 {
+
+    public static final NetworkManager network = new NetworkManager("skinport");
+
+    public static LoadingCache<UUID, Integer> serverCache;
+    @SideOnly(Side.CLIENT)
+    public static LoadingCache<UUID, Integer> clientCache;
+    @SideOnly(Side.CLIENT)
+    public static Map<String, Render> skinMap;
+    @SideOnly(Side.CLIENT)
+    public static int clientFlags;
+
+    @SideOnly(Side.CLIENT)
+    public static ISkinProviderService skinService;
+    @SideOnly(Side.CLIENT)
+    public static ISkinProviderService capeService;
 
     public static EntityPlayerMP findPlayer(UUID uuid)
     {
@@ -204,21 +219,6 @@ public class SkinPort
             new PacketGet0().handlePacketClient();
         }
     }
-
-    public static final NetworkManager network = new NetworkManager("skinport");
-
-    public static LoadingCache<UUID, Integer> serverCache;
-    @SideOnly(Side.CLIENT)
-    public static LoadingCache<UUID, Integer> clientCache;
-    @SideOnly(Side.CLIENT)
-    public static Map<String, Render> skinMap;
-    @SideOnly(Side.CLIENT)
-    public static int clientFlags;
-
-    @SideOnly(Side.CLIENT)
-    public static ISkinProviderService skinService;
-    @SideOnly(Side.CLIENT)
-    public static ISkinProviderService capeService;
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent

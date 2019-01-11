@@ -14,6 +14,8 @@ public enum SkinCustomization
     right_pants_leg,
     hat;
 
+    private static final int _defaultFlags = of(values());
+
     public static boolean contains(int flags, SkinCustomization... parts)
     {
         return (flags & of(parts)) != 0;
@@ -34,7 +36,6 @@ public enum SkinCustomization
 
     private final IChatComponent _displayName = new ChatComponentTranslation("options.modelPart." + name(), new Object[0]);
     private final int _flag = (int) Math.pow(2, ordinal());
-    private static final int _defaultFlags = of(values());
 
     public IChatComponent getDisplayName()
     {

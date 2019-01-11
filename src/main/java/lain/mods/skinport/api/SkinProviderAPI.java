@@ -2,19 +2,79 @@ package lain.mods.skinport.api;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import lain.mods.skinport.PlayerUtils;
-import lain.mods.skinport.SkinPort;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.util.ResourceLocation;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
+import lain.mods.skinport.PlayerUtils;
+import lain.mods.skinport.SkinPort;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public class SkinProviderAPI
 {
+
+    public static final ISkin SKIN_STEVE = new ISkin()
+    {
+
+        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/steve.png");
+
+        @Override
+        public ResourceLocation getSkinLocation()
+        {
+            return texture;
+        }
+
+        @Override
+        public String getSkinType()
+        {
+            return "default";
+        }
+
+        @Override
+        public boolean isSkinReady()
+        {
+            return true;
+        }
+
+        @Override
+        public void onRemoval()
+        {
+        }
+
+    };
+
+    public static final ISkin SKIN_ALEX = new ISkin()
+    {
+
+        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/alex.png");
+
+        @Override
+        public ResourceLocation getSkinLocation()
+        {
+            return texture;
+        }
+
+        @Override
+        public String getSkinType()
+        {
+            return "slim";
+        }
+
+        @Override
+        public boolean isSkinReady()
+        {
+            return true;
+        }
+
+        @Override
+        public void onRemoval()
+        {
+        }
+
+    };
 
     public static ISkinProviderService createService()
     {
@@ -106,64 +166,5 @@ public class SkinProviderAPI
             return SkinPort.skinService.getSkin(player);
         return null;
     }
-
-    public static final ISkin SKIN_STEVE = new ISkin()
-    {
-
-        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/steve.png");
-
-        @Override
-        public ResourceLocation getSkinLocation()
-        {
-            return texture;
-        }
-
-        @Override
-        public String getSkinType()
-        {
-            return "default";
-        }
-
-        @Override
-        public boolean isSkinReady()
-        {
-            return true;
-        }
-
-        @Override
-        public void onRemoval()
-        {
-        }
-
-    };
-    public static final ISkin SKIN_ALEX = new ISkin()
-    {
-
-        ResourceLocation texture = new ResourceLocation("skinport", "textures/entity/alex.png");
-
-        @Override
-        public ResourceLocation getSkinLocation()
-        {
-            return texture;
-        }
-
-        @Override
-        public String getSkinType()
-        {
-            return "slim";
-        }
-
-        @Override
-        public boolean isSkinReady()
-        {
-            return true;
-        }
-
-        @Override
-        public void onRemoval()
-        {
-        }
-
-    };
 
 }

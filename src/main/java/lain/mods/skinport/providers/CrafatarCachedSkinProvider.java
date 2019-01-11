@@ -9,6 +9,9 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import com.google.common.base.Strings;
 import lain.mods.skinport.LegacyConversion;
 import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinData;
@@ -16,9 +19,6 @@ import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import com.google.common.base.Strings;
 
 public class CrafatarCachedSkinProvider implements ISkinProvider
 {

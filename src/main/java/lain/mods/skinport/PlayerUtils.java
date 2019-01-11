@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.MinecraftForge;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -15,6 +12,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
 
 public class PlayerUtils
 {
@@ -43,6 +43,9 @@ public class PlayerUtils
         }
 
     }
+
+    static Set<UUID> offlineIDs = Sets.newHashSet();
+    static Map<UUID, UUID> offlineIDMap = Maps.newHashMap();
 
     public static void clearCache()
     {
@@ -111,8 +114,5 @@ public class PlayerUtils
         MinecraftForge.EVENT_BUS.register(listener);
         FMLCommonHandler.instance().bus().register(listener);
     }
-
-    static Set<UUID> offlineIDs = Sets.newHashSet();
-    static Map<UUID, UUID> offlineIDMap = Maps.newHashMap();
 
 }

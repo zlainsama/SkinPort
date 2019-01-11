@@ -1,8 +1,8 @@
 package lain.mods.skinport.compat;
 
+import api.player.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import api.player.model.ModelPlayer;
 
 public class SkinPortModelPlayer_RPA extends ModelPlayer
 {

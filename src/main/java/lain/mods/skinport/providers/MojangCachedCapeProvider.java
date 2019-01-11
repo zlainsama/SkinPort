@@ -10,16 +10,16 @@ import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import com.google.common.base.Strings;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lain.mods.skinport.PlayerUtils;
 import lain.mods.skinport.SkinData;
 import lain.mods.skinport.api.ISkin;
 import lain.mods.skinport.api.ISkinProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import com.google.common.base.Strings;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 public class MojangCachedCapeProvider implements ISkinProvider
 {

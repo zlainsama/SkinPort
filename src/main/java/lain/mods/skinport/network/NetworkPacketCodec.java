@@ -1,8 +1,8 @@
 package lain.mods.skinport.network;
 
+import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 
 public class NetworkPacketCodec extends FMLIndexedMessageToMessageCodec<NetworkPacket>
 {

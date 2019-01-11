@@ -1,12 +1,12 @@
 package lain.mods.skinport.network;
 
 import java.util.EnumMap;
-import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public class NetworkManager
 {
