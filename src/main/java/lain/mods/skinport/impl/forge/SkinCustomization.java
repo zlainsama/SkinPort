@@ -80,10 +80,10 @@ public enum SkinCustomization
 
     }
 
+    private static final int _defaultFlags = of(values());
+
     public static final SidedOptionalTupleKeyMap<UUID, Integer> Flags = new SidedOptionalTupleKeyMap<>();
     public static int ClientFlags = getDefaultFlags();
-
-    private static final int _defaultFlags = of(values());
 
     public static boolean contains(int flags, SkinCustomization... parts)
     {
