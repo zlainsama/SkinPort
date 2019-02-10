@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-v8c"
+version = "1.7.10-v9"
 group= "lain.mods.skinport"
 archivesBaseName = "SkinPort"
 
@@ -29,7 +29,7 @@ minecraft {
 jar
 {
     manifest {
-        attributes 'FMLCorePlugin': 'lain.mods.skinport.asm.Plugin',
+        attributes 'FMLCorePlugin': 'lain.mods.skinport.init.forge.asm.Plugin',
 		           'FMLCorePluginContainsFMLMod': 'true'
     }
 }
@@ -54,5 +54,5 @@ processResources
     }
 }
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
