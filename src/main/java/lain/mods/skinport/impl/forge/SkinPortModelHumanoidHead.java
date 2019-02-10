@@ -31,13 +31,4 @@ public class SkinPortModelHumanoidHead extends ModelSkeletonHead
         hat.rotateAngleX = skeletonHead.rotateAngleX;
     }
 
-    public SkinPortModelHumanoidHead setTextureSize(int width, int height)
-    {
-        textureWidth = width;
-        textureHeight = height;
-        skeletonHead.setTextureSize(width, height);
-        hat.setTextureSize(width, height);
-        return this;
-    }
-
 }

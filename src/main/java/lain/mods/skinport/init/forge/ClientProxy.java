@@ -1,17 +1,14 @@
 package lain.mods.skinport.init.forge;
 
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.WeakHashMap;
-import java.util.function.Predicate;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -31,18 +28,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -72,7 +68,7 @@ public class ClientProxy extends CommonProxy
     {
         ITextureObject texture = FMLClientHandler.instance().getClient().getTextureManager().getTexture(location);
         if (texture instanceof CustomSkinTexture)
-            return modelHumanoidHead.setTextureSize(((CustomSkinTexture) texture).getWidth(), ((CustomSkinTexture) texture).getHeight());
+            return modelHumanoidHead;
         return null;
     }
 
@@ -172,8 +168,6 @@ public class ClientProxy extends CommonProxy
         }
     }
 
-    private final Map<Class<?>, Optional<Field[]>> allSubModelFields = new HashMap<Class<?>, Optional<Field[]>>();;
-
     @SubscribeEvent
     public void handleClientTicks(TickEvent.ClientTickEvent event)
     {
@@ -188,6 +182,8 @@ public class ClientProxy extends CommonProxy
                     SkinProviderAPI.SKIN.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
                     SkinProviderAPI.CAPE.getSkin(PlayerProfile.wrapGameProfile(player.getGameProfile()));
                 }
+                if (TileEntityRendererDispatcher.instance.getSpecialRendererByClass(TileEntitySkull.class).getClass() != TileEntitySkullRenderer.class) // Aggressively restore vanilla TileEntitySkullRenderer
+                    ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkull.class, new TileEntitySkullRenderer());
             }
         }
     }
@@ -196,115 +192,6 @@ public class ClientProxy extends CommonProxy
     public void handleEvent(ClientDisconnectionFromServerEvent event)
     {
         SkinCustomization.Flags.clear(Side.CLIENT);
-    }
-
-    @SubscribeEvent
-    public void handlePlayerRender_Post(RenderPlayerEvent.Post event)
-    {
-        ModelBiped model = event.renderer.modelBipedMain;
-        setSubModelTextureSize_Main(model, 64, 64);
-        setSubModelTextureSize_Cape(model, 64, 32);
-    }
-
-    @SubscribeEvent
-    public void handlePlayerRender_Pre(RenderPlayerEvent.Pre event)
-    {
-        EntityPlayer p = event.entityPlayer;
-        if (p instanceof AbstractClientPlayer)
-        {
-            AbstractClientPlayer player = (AbstractClientPlayer) p;
-            ModelBiped model = event.renderer.modelBipedMain;
-            ResourceLocation locSkin = getLocationSkin(player, null);
-            ResourceLocation locCape = getLocationCape(player, null);
-            if (locSkin != null)
-            {
-                ITextureObject texture = FMLClientHandler.instance().getClient().getTextureManager().getTexture(locSkin);
-                if (texture instanceof CustomSkinTexture)
-                    setSubModelTextureSize_Main(model, ((CustomSkinTexture) texture).getWidth(), ((CustomSkinTexture) texture).getHeight());
-            }
-            if (locCape != null)
-            {
-                ITextureObject texture = FMLClientHandler.instance().getClient().getTextureManager().getTexture(locCape);
-                if (texture instanceof CustomSkinTexture)
-                    setSubModelTextureSize_Cape(model, ((CustomSkinTexture) texture).getWidth(), ((CustomSkinTexture) texture).getHeight());
-            }
-        }
-    }
-
-    private void setSubModelTextureSize(ModelBase model, int width, int height, Predicate<ModelRenderer> filter)
-    {
-        if (allSubModelFields == null)
-            return;
-
-        Class<?> clazz = model.getClass();
-        if (!allSubModelFields.containsKey(clazz))
-        {
-            try
-            {
-                List<Field> fields = new ArrayList<Field>();
-                do
-                {
-                    for (Field f : clazz.getDeclaredFields())
-                    {
-                        try
-                        {
-                            if (ModelRenderer.class.isAssignableFrom(f.getType()))
-                            {
-                                f.setAccessible(true);
-                                fields.add(f);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                        }
-                    }
-                    clazz = clazz.getSuperclass();
-                }
-                while (clazz != null);
-                if (fields.isEmpty())
-                    allSubModelFields.put(clazz, Optional.empty());
-                else
-                {
-                    Field[] found = new Field[fields.size()];
-                    fields.toArray(found);
-                    allSubModelFields.put(clazz, Optional.of(found));
-                }
-            }
-            catch (Exception e)
-            {
-                allSubModelFields.put(clazz, Optional.empty());
-            }
-        }
-
-        allSubModelFields.get(clazz).ifPresent(fields -> {
-            for (Field f : fields)
-            {
-                Object o = null;
-                try
-                {
-                    o = f.get(model);
-                }
-                catch (Exception e)
-                {
-                }
-                if (o != null)
-                {
-                    ModelRenderer m = (ModelRenderer) o;
-                    if (filter.test(m))
-                        m.setTextureSize(width, height);
-                }
-            }
-        });
-    }
-
-    private void setSubModelTextureSize_Cape(ModelBase model, int width, int height)
-    {
-        setSubModelTextureSize(model, width, height, m -> m.textureWidth == m.textureHeight * 2);
-    }
-
-    private void setSubModelTextureSize_Main(ModelBase model, int width, int height)
-    {
-        setSubModelTextureSize(model, width, height, m -> m.textureWidth == m.textureHeight);
     }
 
 }

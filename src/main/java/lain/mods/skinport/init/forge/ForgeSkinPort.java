@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -61,7 +62,8 @@ public class ForgeSkinPort
         @Override
         public ISkin getSkin(IPlayerProfile profile)
         {
-            if ((profile.getPlayerID().hashCode() & 0x1) == 1)
+            UUID uuid;
+            if ((uuid = profile.getPlayerID()) != null && (uuid.hashCode() & 0x1) == 1)
                 return DefaultAlex;
             return DefaultSteve;
         }
