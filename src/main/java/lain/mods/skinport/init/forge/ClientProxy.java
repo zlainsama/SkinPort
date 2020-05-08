@@ -132,12 +132,12 @@ public class ClientProxy extends CommonProxy
 
     public static boolean hasCape(AbstractClientPlayer player, boolean result)
     {
-        return getLocationCape(player, null) != null;
+        return player.getLocationCape() != null;
     }
 
     public static boolean hasSkin(AbstractClientPlayer player, boolean result)
     {
-        return getLocationSkin(player, null) != null;
+        return player.getLocationSkin() != null;
     }
 
     @SideOnly(Side.CLIENT)
