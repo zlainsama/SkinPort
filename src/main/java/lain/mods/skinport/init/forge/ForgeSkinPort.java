@@ -26,7 +26,9 @@ import lain.mods.skins.impl.SkinData;
 import lain.mods.skins.providers.CrafatarCapeProvider;
 import lain.mods.skins.providers.CrafatarSkinProvider;
 import lain.mods.skins.providers.CustomServerCapeProvider;
+import lain.mods.skins.providers.CustomServerCapeProvider2;
 import lain.mods.skins.providers.CustomServerSkinProvider;
+import lain.mods.skins.providers.CustomServerSkinProvider2;
 import lain.mods.skins.providers.MojangCapeProvider;
 import lain.mods.skins.providers.MojangSkinProvider;
 import lain.mods.skins.providers.UserManagedCapeProvider;
@@ -121,6 +123,9 @@ public class ForgeSkinPort
             boolean useCrafatar = config.getBoolean("useCrafatar", "client", true, "");
             boolean useCustomServer = config.getBoolean("useCustomServer", "client", false, "");
             String hostCustomServer = config.getString("hostCustomServer", "client", "http://example.com", "/skins/(uuid|username) and /capes/(uuid|username) will be queried for respective resources");
+            boolean useCustomServer2 = config.getBoolean("useCustomServer2", "client", false, "");
+            String hostCustomServer2Skin = config.getString("hostCustomServer2Skin", "client", "http://example.com/skins/%auto%", "%name% will be replaced by username, %uuid% will be replaced by uuid, %auto% will be replaced by username or uuid accordingly");
+            String hostCustomServer2Cape = config.getString("hostCustomServer2Cape", "client", "http://example.com/capes/%auto%", "%name% will be replaced by username, %uuid% will be replaced by uuid, %auto% will be replaced by username or uuid accordingly");
             if (config.hasChanged())
                 config.save();
 
@@ -128,6 +133,8 @@ public class ForgeSkinPort
             SkinProviderAPI.SKIN.registerProvider(new UserManagedSkinProvider(Paths.get(".", "cachedImages")).withFilter(LegacyConversion.createFilter()));
             if (useCustomServer)
                 SkinProviderAPI.SKIN.registerProvider(new CustomServerSkinProvider().setHost(hostCustomServer).withFilter(LegacyConversion.createFilter()));
+            if (useCustomServer2)
+                SkinProviderAPI.SKIN.registerProvider(new CustomServerSkinProvider2().setHost(hostCustomServer2Skin).withFilter(LegacyConversion.createFilter()));
             if (useMojang)
                 SkinProviderAPI.SKIN.registerProvider(new MojangSkinProvider().withFilter(LegacyConversion.createFilter()));
             if (useCrafatar)
@@ -138,6 +145,8 @@ public class ForgeSkinPort
             SkinProviderAPI.CAPE.registerProvider(new UserManagedCapeProvider(Paths.get(".", "cachedImages")));
             if (useCustomServer)
                 SkinProviderAPI.CAPE.registerProvider(new CustomServerCapeProvider().setHost(hostCustomServer));
+            if (useCustomServer2)
+                SkinProviderAPI.CAPE.registerProvider(new CustomServerCapeProvider2().setHost(hostCustomServer2Cape).withFilter(LegacyConversion.createFilter()));
             if (useMojang)
                 SkinProviderAPI.CAPE.registerProvider(new MojangCapeProvider());
             if (useCrafatar)
