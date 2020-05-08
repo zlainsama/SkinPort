@@ -10,6 +10,7 @@ import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -77,6 +78,20 @@ public class Hooks
         if (DISABLED)
             return result;
         return ClientProxy.hasSkin(player, result);
+    }
+
+    public static int ModelBiped_initHeight(ModelBiped model, int textureHeight)
+    {
+        if (DISABLED)
+            return textureHeight;
+        return ClientProxy.initHeight(model, textureHeight);
+    }
+
+    public static int ModelBiped_initWidth(ModelBiped model, int textureWidth)
+    {
+        if (DISABLED)
+            return textureWidth;
+        return ClientProxy.initWidth(model, textureWidth);
     }
 
     public static Render RenderManager_getEntityRenderObject(RenderManager manager, Entity entity, Render result)

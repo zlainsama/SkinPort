@@ -334,6 +334,59 @@ public class ASMTransformer implements IClassTransformer
 
     }
 
+    class transformer005 extends ClassVisitor
+    {
+
+        class method001 extends MethodVisitor
+        {
+
+            public method001(MethodVisitor mv)
+            {
+                super(Opcodes.ASM5, mv);
+            }
+
+            @Override
+            public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf)
+            {
+                if (opcode == Opcodes.INVOKESPECIAL && "<init>".equals(name))
+                {
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitVarInsn(Opcodes.ILOAD, 3);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/init/forge/asm/Hooks", "ModelBiped_initWidth", "(Lnet/minecraft/client/model/ModelBiped;I)I", false);
+                    this.visitVarInsn(Opcodes.ISTORE, 3);
+
+                    this.visitVarInsn(Opcodes.ALOAD, 0);
+                    this.visitVarInsn(Opcodes.ILOAD, 4);
+                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/init/forge/asm/Hooks", "ModelBiped_initHeight", "(Lnet/minecraft/client/model/ModelBiped;I)I", false);
+                    this.visitVarInsn(Opcodes.ISTORE, 4);
+                }
+                else
+                {
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                }
+            }
+
+        }
+
+        ObfHelper m001 = ObfHelper.newMethod("<init>", "net/minecraft/client/model/ModelBiped", "(FFII)V");
+
+        public transformer005(ClassVisitor cv)
+        {
+            super(Opcodes.ASM5, cv);
+        }
+
+        @Override
+        public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions)
+        {
+            if (m001.match(name, desc))
+                return new method001(super.visitMethod(access, name, desc, signature, exceptions));
+            return super.visitMethod(access, name, desc, signature, exceptions);
+        }
+
+    }
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes)
     {
@@ -345,6 +398,8 @@ public class ASMTransformer implements IClassTransformer
             return transform003(bytes);
         if ("net.minecraft.client.gui.GuiOptions".equals(transformedName))
             return transform004(bytes);
+        if ("net.minecraft.client.model.ModelBiped".equals(transformedName))
+            return transform005(bytes);
         return bytes;
     }
 
@@ -377,6 +432,14 @@ public class ASMTransformer implements IClassTransformer
         ClassReader classReader = new ClassReader(bytes);
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classReader.accept(new transformer004(classWriter), ClassReader.EXPAND_FRAMES);
+        return classWriter.toByteArray();
+    }
+
+    private byte[] transform005(byte[] bytes)
+    {
+        ClassReader classReader = new ClassReader(bytes);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classReader.accept(new transformer005(classWriter), ClassReader.EXPAND_FRAMES);
         return classWriter.toByteArray();
     }
 
