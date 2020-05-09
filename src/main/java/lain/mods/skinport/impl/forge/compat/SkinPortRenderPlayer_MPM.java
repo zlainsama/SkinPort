@@ -11,11 +11,11 @@ import lain.mods.skinport.init.forge.ForgeSkinPort;
 import lain.mods.skins.impl.PlayerProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.mpm.client.RenderEvent;
 import noppes.mpm.client.RenderMPM;
+import noppes.mpm.client.model.ModelMPM;
 
 @SideOnly(Side.CLIENT)
 public class SkinPortRenderPlayer_MPM extends RenderMPM implements SpecialRenderer
@@ -29,11 +29,11 @@ public class SkinPortRenderPlayer_MPM extends RenderMPM implements SpecialRender
 
         setRenderManager(manager);
         mainModel = new SkinPortModelPlayer_MPM(0.0F, smallArms);
-        modelBipedMain = (ModelBiped) mainModel;
+        modelBipedMain = field_77109_a = (ModelMPM) mainModel;
         modelPlayer = (SkinPortModelPlayer_MPM) mainModel;
 
-        modelArmor = new SkinPortModelPlayer_MPM(0.5F, smallArms);
-        modelArmorChestplate = new SkinPortModelPlayer_MPM(1.0F, smallArms);
+        modelArmor = field_77111_i = new SkinPortModelPlayer_MPM(0.5F, smallArms);
+        modelArmorChestplate = field_77108_b = new SkinPortModelPlayer_MPM(1.0F, smallArms);
     }
 
     @Override
