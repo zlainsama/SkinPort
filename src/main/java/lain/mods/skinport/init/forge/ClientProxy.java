@@ -19,6 +19,9 @@ import lain.mods.skinport.impl.forge.SkinCustomization;
 import lain.mods.skinport.impl.forge.SkinPortGuiCustomizeSkin;
 import lain.mods.skinport.impl.forge.SkinPortModelHumanoidHead;
 import lain.mods.skinport.impl.forge.SkinPortRenderPlayer;
+import lain.mods.skinport.impl.forge.SpecialModel;
+import lain.mods.skinport.impl.forge.SpecialRenderer;
+import lain.mods.skinport.impl.forge.compat.SkinPortRenderPlayer_MPM;
 import lain.mods.skinport.impl.forge.compat.SkinPortRenderPlayer_RPA;
 import lain.mods.skins.api.SkinProviderAPI;
 import lain.mods.skins.api.interfaces.ISkin;
@@ -28,6 +31,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -115,7 +119,10 @@ public class ClientProxy extends CommonProxy
 
     public static Render getPlayerRenderer(RenderManager manager, AbstractClientPlayer player, Render result)
     {
-        return renderers.getOrDefault(getSkinType(player), result);
+        result = renderers.getOrDefault(getSkinType(player), result);
+        if (result instanceof SpecialRenderer)
+            ((SpecialRenderer) result).onGetRenderer(manager, player);
+        return result;
     }
 
     public static String getSkinType(AbstractClientPlayer player)
@@ -140,6 +147,20 @@ public class ClientProxy extends CommonProxy
         return player.getLocationSkin() != null;
     }
 
+    public static int initHeight(ModelBiped model, int textureHeight)
+    {
+        if (model instanceof SpecialModel)
+            return ((SpecialModel) model).initHeight();
+        return textureHeight;
+    }
+
+    public static int initWidth(ModelBiped model, int textureWidth)
+    {
+        if (model instanceof SpecialModel)
+            return ((SpecialModel) model).initWidth();
+        return textureWidth;
+    }
+
     @SideOnly(Side.CLIENT)
     public static void onButtonAction(GuiOptions gui, GuiButton button)
     {
@@ -156,7 +177,12 @@ public class ClientProxy extends CommonProxy
 
     public static void setupRenderers(RenderManager manager)
     {
-        if (Loader.isModLoaded("RenderPlayerAPI")) // Compatibility with RenderPlayerAPI
+        if (Loader.isModLoaded("moreplayermodels")) // Compatibility with MorePlayerModels
+        {
+            renderers.put("default", new SkinPortRenderPlayer_MPM(manager, false));
+            renderers.put("slim", new SkinPortRenderPlayer_MPM(manager, true));
+        }
+        else if (Loader.isModLoaded("RenderPlayerAPI")) // Compatibility with RenderPlayerAPI
         {
             renderers.put("default", new SkinPortRenderPlayer_RPA(manager, false));
             renderers.put("slim", new SkinPortRenderPlayer_RPA(manager, true));
