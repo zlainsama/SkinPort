@@ -146,7 +146,7 @@ public class ForgeSkinPort
             if (useCustomServer)
                 SkinProviderAPI.CAPE.registerProvider(new CustomServerCapeProvider().setHost(hostCustomServer));
             if (useCustomServer2)
-                SkinProviderAPI.CAPE.registerProvider(new CustomServerCapeProvider2().setHost(hostCustomServer2Cape).withFilter(LegacyConversion.createFilter()));
+                SkinProviderAPI.CAPE.registerProvider(new CustomServerCapeProvider2().setHost(hostCustomServer2Cape));
             if (useMojang)
                 SkinProviderAPI.CAPE.registerProvider(new MojangCapeProvider());
             if (useCrafatar)
