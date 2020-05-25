@@ -119,6 +119,8 @@ public class ClientProxy extends CommonProxy
 
     public static Render getPlayerRenderer(RenderManager manager, AbstractClientPlayer player, Render result)
     {
+        if (renderers.isEmpty())
+            setupRenderers(manager);
         result = renderers.getOrDefault(getSkinType(player), result);
         if (result instanceof SpecialRenderer)
             ((SpecialRenderer) result).onGetRenderer(manager, player);

@@ -84,11 +84,6 @@ public class Hooks
         return result;
     }
 
-    public static void RenderManager_postRenderManagerInit(RenderManager manager)
-    {
-        ClientProxy.setupRenderers(manager);
-    }
-
     public static ModelSkeletonHead TileEntitySkullRenderer_bindHumanoidHead(ResourceLocation location, ModelSkeletonHead result)
     {
         ModelSkeletonHead model = ClientProxy.getHumanoidHead(location, result);

@@ -210,27 +210,6 @@ public class ASMTransformer implements IClassTransformer
             @Override
             public void visitInsn(int opcode)
             {
-                if (opcode == Opcodes.RETURN)
-                {
-                    this.visitVarInsn(Opcodes.ALOAD, 0);
-                    this.visitMethodInsn(Opcodes.INVOKESTATIC, "lain/mods/skinport/init/forge/asm/Hooks", "RenderManager_postRenderManagerInit", "(Lnet/minecraft/client/renderer/entity/RenderManager;)V", false);
-                }
-                super.visitInsn(opcode);
-            }
-
-        }
-
-        class method002 extends MethodVisitor
-        {
-
-            public method002(MethodVisitor mv)
-            {
-                super(Opcodes.ASM5, mv);
-            }
-
-            @Override
-            public void visitInsn(int opcode)
-            {
                 if (opcode == Opcodes.ARETURN)
                 {
                     this.visitVarInsn(Opcodes.ASTORE, 2);
@@ -244,8 +223,7 @@ public class ASMTransformer implements IClassTransformer
 
         }
 
-        ObfHelper m001 = ObfHelper.newMethod("<init>", "net/minecraft/client/renderer/entity/RenderManager", "()V");
-        ObfHelper m002 = ObfHelper.newMethod("func_78713_a", "net/minecraft/client/renderer/entity/RenderManager", "(Lnet/minecraft/entity/Entity;)Lnet/minecraft/client/renderer/entity/Render;").setDevName("getEntityRenderObject");
+        ObfHelper m001 = ObfHelper.newMethod("func_78713_a", "net/minecraft/client/renderer/entity/RenderManager", "(Lnet/minecraft/entity/Entity;)Lnet/minecraft/client/renderer/entity/Render;").setDevName("getEntityRenderObject");
 
         public transformer003(ClassVisitor cv)
         {
@@ -257,8 +235,6 @@ public class ASMTransformer implements IClassTransformer
         {
             if (m001.match(name, desc))
                 return new method001(super.visitMethod(access, name, desc, signature, exceptions));
-            if (m002.match(name, desc))
-                return new method002(super.visitMethod(access, name, desc, signature, exceptions));
             return super.visitMethod(access, name, desc, signature, exceptions);
         }
 
